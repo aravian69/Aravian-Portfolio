@@ -1680,11 +1680,14 @@ html[data-page="home"] body {
 /* ── RESPONSIVE ── */
 /* Masonry column count is handled in JS; only spacing changes here. */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  /* Switch to single column at tablet width so the title never wraps mid-word */
   .home-page { grid-template-columns: 1fr; }
-  .home-left { padding: 100px var(--sp-md) var(--sp-lg); }
-  /* Empty decorative column — hide entirely on mobile */
   .home-right { display: none; }
+}
+
+@media (max-width: 768px) {
+  .home-left { padding: 100px var(--sp-md) var(--sp-lg); }
   .masonry-grid { padding: 0 var(--sp-md) var(--sp-2xl); }
   .filter-tabs { padding: 0 var(--sp-md); }
   /* Ensure filter tabs meet 44px touch target */
