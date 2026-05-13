@@ -18,7 +18,12 @@ export default function ContactPage() {
           <p className="contact-lead">
             Have a project in mind? Reach out and let&apos;s make something cinematic.
           </p>
-          <a className="contact-email" href="mailto:azizaravian@gmail.com">
+          <a
+            className="contact-email"
+            href="https://mail.google.com/mail/?view=cm&to=azizaravian@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             azizaravian@gmail.com
           </a>
         </div>
