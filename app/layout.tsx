@@ -11,6 +11,37 @@ export const metadata: Metadata = {
   title: 'Abdul Aziz — VFX, Motion & AI',
   description:
     'VFX artist, motion designer, and AI video creator based in Jakarta. Specialising in color grading, motion graphics, and cinematic visual storytelling.',
+  metadataBase: new URL('https://www.rav709.site'),
+  openGraph: {
+    title: 'Abdul Aziz — VFX, Motion & AI',
+    description:
+      'VFX artist, motion designer, and AI video creator based in Jakarta. Specialising in color grading, motion graphics, and cinematic visual storytelling.',
+    url: 'https://www.rav709.site',
+    siteName: 'Abdul Aziz Portfolio',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Abdul Aziz — VFX, Motion & AI',
+    description:
+      'VFX artist, motion designer, and AI video creator based in Jakarta. Specialising in color grading, motion graphics, and cinematic visual storytelling.',
+    creator: '@aziizaravian',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://www.rav709.site',
+  },
 };
 
 // Anti-FOUC: runs before React hydrates — reads localStorage theme and sets data-theme on <html>
