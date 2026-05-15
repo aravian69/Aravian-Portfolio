@@ -1352,11 +1352,16 @@ html[data-page="home"] body {
 
 @media (max-width: 768px) {
   .site-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--sp-xs);
-    padding: var(--sp-md);
+    /* Stay as a row on mobile — stacking makes it tall and overlaps home content */
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-xs) var(--sp-md);
+    padding: 0.65rem var(--sp-md);
+    font-size: 0.62rem;
   }
+  /* Give home-left enough bottom breathing room so avail clears the fixed footer */
+  .home-left { padding-bottom: 80px; }
 }
 
 /* ── MODAL ROOT ── */
