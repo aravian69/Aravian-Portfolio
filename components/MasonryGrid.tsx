@@ -282,7 +282,7 @@ export default function MasonryGrid() {
       const padR = parseFloat(cs.paddingRight) || 0;
       const padT = parseFloat(cs.paddingTop) || 0;
       const innerW = grid.clientWidth - padL - padR;
-      const gap = 8;
+      const gap = 14;
 
       const cols = colsForWidth(grid.clientWidth);
       const colW = (innerW - gap * (cols - 1)) / cols;
@@ -404,11 +404,16 @@ export default function MasonryGrid() {
           style={{ visibility: 'hidden' }}
         >
           <div className="grid-spacer-layer" aria-hidden="true" />
-          {filtered.map((item, idx) => (
+          {filtered.map((item, idx) => {
+            const sw = swatches.get(item.id);
+            return (
             <div
               key={`${activeFilter}-${item.id}`}
               className={`masonry-item${item.ratio !== 'portrait' ? ' masonry-item-landscape' : ''}`}
-              style={{ animationDelay: `${idx * CARD_STAGGER_MS}ms` }}
+              style={{
+                animationDelay: `${idx * CARD_STAGGER_MS}ms`,
+                ...(sw ? { '--card-hue': sw.hue, '--card-sat': `${Math.round(sw.sat * 100)}%` } : {}),
+              } as React.CSSProperties}
               onClick={() => setSelected(item)}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -426,6 +431,11 @@ export default function MasonryGrid() {
                   className={`item-thumb ${item.ratio}`}
                   style={getThumbStyle(item)}
                 />
+                {/* Blurred duplicate — masked to bottom, creates gradient-blur effect */}
+                <div
+                  className="item-thumb-blur"
+                  style={getThumbStyle(item)}
+                />
                 {item.images && item.images.length > 1 && (
                   <div className="item-stack-badge" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -435,16 +445,15 @@ export default function MasonryGrid() {
                     <span>{item.images.length}</span>
                   </div>
                 )}
-                <div className="item-view-hint" aria-hidden="true">
-                  {item.videoUrl ? 'Play' : 'View'}
+                <div className="item-caption">
+                  <div className="item-cat">{item.cat}</div>
+                  <div className="item-title">{item.title}</div>
+                  {item.desc && <div className="item-desc">{item.desc}</div>}
                 </div>
               </div>
-              <div className="item-caption">
-                <div className="item-title">{item.title}</div>
-                <div className="item-cat">{item.desc ?? item.cat}</div>
-              </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

@@ -962,8 +962,8 @@ nav {
 
 .item-media {
   position: relative;
-  overflow: hidden;
-  border-radius: 4px;
+  /* clip-path instead of overflow:hidden — lets backdrop-filter work on children */
+  clip-path: inset(0 round 10px);
   background: var(--surface);
   width: 100%;
   display: block;
@@ -1017,43 +1017,95 @@ nav {
 .landscape { aspect-ratio: 16 / 9; }
 .square    { aspect-ratio: 1 / 1; }
 
+/* Blurred image duplicate — same background, blurred, masked to bottom portion */
+.item-thumb-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px);
+  transform: scale(1.08); /* prevent blur edge fringing */
+  /* Fade in from transparent at top to fully blurred at bottom */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 55%, black 85%);
+  mask-image: linear-gradient(to bottom, transparent 55%, black 85%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Caption overlaid on the image, anchored to the bottom — always visible */
 .item-caption {
-  padding: 8px 2px 2px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  padding: 0 12px 12px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 2px;
-  transform: translateY(3px);
-  opacity: 0.72;
-  transition:
-    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.35s ease;
+  background: linear-gradient(to top,
+    rgba(0,0,0,0.65) 0%,
+    rgba(0,0,0,0.2) 50%,
+    transparent 80%
+  );
+  border-radius: 0 0 4px 4px;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
 }
 .masonry-item:hover .item-caption {
-  transform: translateY(0);
   opacity: 1;
+}
+.masonry-item:hover .item-title {
+  color: var(--accent);
+  transition: color 0.3s ease;
+}
+.masonry-item:hover .item-cat,
+.masonry-item:hover .item-desc {
+  color: var(--accent2);
+  transition: color 0.3s ease;
+}
+/* Light mode: title is big enough for purple; small labels stay white */
+[data-theme="light"] .masonry-item:hover .item-title {
+  color: var(--accent);
+}
+[data-theme="light"] .masonry-item:hover .item-cat,
+[data-theme="light"] .masonry-item:hover .item-desc {
+  color: rgba(255,255,255,0.75);
+}
+
+.item-cat {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
 }
 
 .item-title {
   font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  line-height: 1.25;
-  color: var(--text);
-  white-space: nowrap;
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: #fff;
+  text-transform: uppercase;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.25s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.masonry-item:hover .item-title { color: var(--accent2); }
-
-.item-cat {
+.item-desc {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase;
+  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
