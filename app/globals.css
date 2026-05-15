@@ -513,6 +513,20 @@ nav {
 
 .home-title .acc { color: var(--accent); }
 
+/* Prevent letter-span groups from breaking mid-character on any word */
+.home-title .outline,
+.home-title .acc,
+.about-big-name .outline,
+.about-big-name .acc {
+  white-space: nowrap;
+  display: inline-block;
+}
+.contact-big .outline,
+.contact-big .acc {
+  white-space: nowrap;
+  display: inline-block;
+}
+
 .home-lead {
   font-family: var(--font-body);
   font-size: var(--tx-md);
@@ -1728,9 +1742,32 @@ html[data-page="home"] body {
   .home-lead { max-width: 100%; }
   .home-title { font-size: clamp(2.4rem, 10vw, 3.5rem); }
   .contact-big { font-size: clamp(2.4rem, 10vw, 3.5rem); }
-  .about-big-name { font-size: clamp(4rem, 22vw, 9rem); }
-  .about-corner-tl { top: 72px; max-width: 120px; }
-  .about-corner-br { bottom: 48px; max-width: 120px; }
+  /* About page: switch from absolute corners to stacked flow on mobile */
+  .about-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 100px var(--sp-md) var(--sp-xl);
+    height: auto;
+    min-height: 100svh;
+    gap: var(--sp-md);
+  }
+  .about-corner-tl {
+    position: static;
+    max-width: 100%;
+  }
+  .about-big-name {
+    font-size: clamp(3.2rem, 18vw, 6rem);
+    text-align: left;
+    align-self: flex-start;
+  }
+  .about-corner-br {
+    position: static;
+    max-width: 100%;
+    text-align: left;
+  }
+  /* Shrink home title a touch more so "ordinary," stays on one line */
+  .home-title { font-size: clamp(2rem, 9vw, 3rem); }
   .filter-tabs { gap: 6px; }
   .filter-tab { font-size: 0.66rem; padding: 0.38rem 0.85rem; }
   /* Socials: stack vertically on narrow phones */
