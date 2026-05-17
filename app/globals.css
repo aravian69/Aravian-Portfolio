@@ -375,6 +375,12 @@ nav {
 
 .nav-links a:hover { color: var(--text); }
 
+.nav-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav-links a::after {
   content: '';
   position: absolute;
@@ -1802,8 +1808,9 @@ html[data-page="home"] body {
   .contact-footer { flex-direction: column; gap: var(--sp-xs); align-items: flex-start; }
   [data-theme="light"] .contact-footer { border-top-color: rgba(0, 0, 0, 0.08); }
   nav { padding: 1rem var(--sp-md); }
-  .nav-right { display: none; }
-  .nav-links a { padding: 0.4rem 0.75rem; font-size: 0.78rem; }
+  .nav-icon { display: flex; }
+  .nav-label { display: none; }
+  .nav-links a { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
   .modal-inner { width: 94vw; }
   /* Portrait video modal: cap to viewport width on mobile */
   .project-modal-portrait {
