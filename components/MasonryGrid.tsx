@@ -392,10 +392,16 @@ export default function MasonryGrid() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="grid-coming-soon">
-          <span className="grid-coming-dot" aria-hidden="true" />
-          <p className="grid-coming-label">More work coming soon</p>
-          <p className="grid-coming-sub">This section is being updated — check back shortly.</p>
+        <div className="placeholder-grid">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="placeholder-tile">
+              <div className="item-media">
+                <div className="item-caption">
+                  <div className="item-cat">More work soon</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         <div

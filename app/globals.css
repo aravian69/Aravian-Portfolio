@@ -752,7 +752,8 @@ nav {
 
 .masonry-grid {
   position: relative;
-  padding: 0 var(--sp-lg) var(--sp-2xl);
+  /* extra bottom padding clears the fixed footer */
+  padding: 0 var(--sp-lg) calc(var(--sp-2xl) + 60px);
   /* hide everything inside until JS has laid out positions */
   visibility: hidden;
   contain: layout;
@@ -841,13 +842,8 @@ nav {
 
 .grid-spacer {
   position: absolute;
-  border-radius: 4px;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  border-radius: 10px;
+  overflow: hidden;
   opacity: 0;
 }
 
@@ -857,22 +853,42 @@ nav {
 
 .grid-spacer::before {
   content: 'More work soon';
-  opacity: 0.45;
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
 }
 
-/* Dark theme: near-black tile, faint light text */
+.grid-spacer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dark theme */
 [data-theme="dark"] .grid-spacer,
 .grid-spacer {
-  background: oklch(12% 0.005 60);
-  color: oklch(85% 0.005 60);
-  border: 1px solid oklch(22% 0.005 60);
+  background: var(--surface);
 }
 
-/* Light theme: near-white tile, faint dark text */
+/* Light theme */
 [data-theme="light"] .grid-spacer {
-  background: oklch(98% 0.002 60);
-  color: oklch(20% 0.005 60);
-  border: 1px solid oklch(88% 0.005 60);
+  background: oklch(92% 0.005 303);
+}
+
+[data-theme="light"] .grid-spacer::before {
+  color: rgba(0,0,0,0.45);
 }
 
 .masonry-item {
@@ -1118,15 +1134,24 @@ nav {
   color: var(--subtle);
 }
 
-.grid-coming-soon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-  padding: clamp(72px, 14vw, 140px) var(--sp-lg);
-  text-align: center;
+  padding: 0 var(--sp-lg);
+  /* Single row — never taller than the remaining viewport */
+  max-height: calc(100svh - 360px);
+  overflow: hidden;
   animation: pageFadeIn 0.4s ease both;
+}
+
+.placeholder-tile {
+  height: 200px;
+  position: relative;
+}
+
+.placeholder-tile .item-media {
+  height: 100%;
 }
 
 .grid-coming-dot {
@@ -1362,7 +1387,8 @@ html[data-page="home"] body {
 }
 
 /* ── HOME: pin footer ── */
-[data-page="home"] .site-footer {
+[data-page="home"] .site-footer,
+[data-page="work"] .site-footer {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1776,6 +1802,7 @@ html[data-page="home"] body {
   .contact-footer { flex-direction: column; gap: var(--sp-xs); align-items: flex-start; }
   [data-theme="light"] .contact-footer { border-top-color: rgba(0, 0, 0, 0.08); }
   nav { padding: 1rem var(--sp-md); }
+  .nav-right { display: none; }
   .nav-links a { padding: 0.4rem 0.75rem; font-size: 0.78rem; }
   .modal-inner { width: 94vw; }
   /* Portrait video modal: cap to viewport width on mobile */
