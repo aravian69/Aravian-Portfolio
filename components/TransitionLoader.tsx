@@ -15,6 +15,15 @@ export default function TransitionLoader() {
   const prevPath  = useRef(pathname);
   const timer     = useRef<ReturnType<typeof setTimeout>>(undefined);
 
+  // Add/remove a body class so the custom cursor hides during loading
+  useEffect(() => {
+    if (phase === 'in') {
+      document.body.classList.add('is-loading');
+    } else {
+      document.body.classList.remove('is-loading');
+    }
+  }, [phase]);
+
   // On first mount (page load / refresh) → hold briefly then exit
   useEffect(() => {
     timer.current = setTimeout(() => setPhase('out'), INITIAL_MS);
