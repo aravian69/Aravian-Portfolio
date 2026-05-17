@@ -772,7 +772,7 @@ nav {
 .back-to-top {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: 72px;
   z-index: 40;
   display: inline-flex;
   align-items: center;
