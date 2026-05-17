@@ -833,7 +833,7 @@ nav {
 @media (max-width: 480px) {
   .back-to-top {
     right: 16px;
-    bottom: 16px;
+    bottom: 64px;
     padding: 9px 12px;
   }
   .back-to-top-label { display: none; }
