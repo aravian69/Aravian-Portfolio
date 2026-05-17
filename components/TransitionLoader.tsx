@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 type Phase = 'hidden' | 'in' | 'out';
 
-const INITIAL_MS = 900; // hold on page load/refresh
+const INITIAL_MS = 600; // hold on page load/refresh
 const NAV_MS     = 700; // hold on navigation
 const HIDE_MS    = 480; // wait for exit animation before unmounting
 

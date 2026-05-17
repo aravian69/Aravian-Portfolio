@@ -1,4 +1,6 @@
-﻿/**
+﻿import { clImg } from '@/lib/cloudinary';
+
+/**
  * lib/projects.ts — portfolio content
  *
  * Adding a new video project:
@@ -45,12 +47,12 @@ export const CATEGORIES: { id: FilterId; label: string }[] = [
 
 export const projects: Project[] = [
   // 3D — Blender + Photoshop
-  { id: '3d1', title: 'Train',                cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394685/train3_00000_ezzhtb.png' },
-  { id: '3d2', title: 'Mist',                 cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394684/mist_00000_iz0czl.png' },
-  { id: '3d3', title: 'Is There Someone Else',cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394683/istheresomeoneelse_00000_t9bdn7.png' },
-  { id: '3d4', title: '3D Render 01',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394688/Untitled-3_00000_vjfnwk.png' },
-  { id: '3d5', title: '3D Render 02',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394687/untitled1_tmgzqd.png' },
-  { id: '3d6', title: '3D Render 03',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: 'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394681/1-1_00000_rcujrh.png' },
+  { id: '3d1', title: 'Train',                cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394685/train3_00000_ezzhtb.png') },
+  { id: '3d2', title: 'Mist',                 cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394684/mist_00000_iz0czl.png') },
+  { id: '3d3', title: 'Is There Someone Else',cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394683/istheresomeoneelse_00000_t9bdn7.png') },
+  { id: '3d4', title: '3D Render 01',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394688/Untitled-3_00000_vjfnwk.png') },
+  { id: '3d5', title: '3D Render 02',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394687/untitled1_tmgzqd.png') },
+  { id: '3d6', title: '3D Render 03',         cat: '3d', ratio: 'landscape', desc: 'Blender + Photoshop', thumbnail: clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394681/1-1_00000_rcujrh.png') },
   {
     id: '3d7',
     title: 'Series',
@@ -58,12 +60,12 @@ export const projects: Project[] = [
     cat: '3d',
     ratio: 'portrait',
     images: [
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_1_xvgdjz.png',
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_2_ca7v3b.png',
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_3_onl5fn.png',
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394678/1_4_cpitws.png',
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_5_pg9x25.png',
-      'https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_6_ckjnsq.png',
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_1_xvgdjz.png'),
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_2_ca7v3b.png'),
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_3_onl5fn.png'),
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394678/1_4_cpitws.png'),
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_5_pg9x25.png'),
+      clImg('https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_6_ckjnsq.png'),
     ],
   },
 

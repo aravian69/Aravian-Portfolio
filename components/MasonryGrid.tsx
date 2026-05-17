@@ -59,6 +59,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               alt={`${project.title} — ${slideIdx + 1} of ${slides.length}`}
               className={`project-modal-image${project.ratio === 'portrait' ? ' project-modal-image-portrait' : ''}`}
               key={slides[slideIdx]}
+              loading="lazy"
+              decoding="async"
             />
             <button
               type="button"
@@ -86,6 +88,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             src={project.thumbnail}
             alt={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
             className={`project-modal-image${project.ratio === 'portrait' ? ' project-modal-image-portrait' : ''}`}
+            loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="project-modal-thumb">
@@ -232,21 +236,31 @@ export default function MasonryGrid() {
   // Extract swatches for every thumbnail once, on mount. Cached.
   useEffect(() => {
     let cancelled = false;
-    const targets = projects.filter((p) => p.thumbnail);
-    Promise.allSettled(
-      targets.map((p) => extractSwatch(p.thumbnail!).then((sw) => [p.id, sw] as const))
-    ).then((results) => {
+    const run = () => {
       if (cancelled) return;
-      const next = new Map<string, Swatch>();
-      results.forEach((r) => {
-        if (r.status === 'fulfilled') next.set(r.value[0], r.value[1]);
+      const targets = projects.filter((p) => p.thumbnail);
+      Promise.allSettled(
+        targets.map((p) => extractSwatch(p.thumbnail!).then((sw) => [p.id, sw] as const))
+      ).then((results) => {
+        if (cancelled) return;
+        const next = new Map<string, Swatch>();
+        results.forEach((r) => {
+          if (r.status === 'fulfilled') next.set(r.value[0], r.value[1]);
+        });
+        if (next.size > 0) {
+          swatchSortRef.current = true;
+          setSwatches(next);
+        }
       });
-      if (next.size > 0) {
-        swatchSortRef.current = true; // next layout is a silent swatch re-sort
-        setSwatches(next);
-      }
-    });
-    return () => { cancelled = true; };
+    };
+
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(run, { timeout: 4000 });
+      return () => { cancelled = true; cancelIdleCallback(id); };
+    } else {
+      const id = setTimeout(run, 2000);
+      return () => { cancelled = true; clearTimeout(id); };
+    }
   }, []);
 
   // Scroll to top of grid area whenever the filter changes
@@ -362,7 +376,11 @@ export default function MasonryGrid() {
       grid.classList.add('is-laid');
     }
 
-    const ro = new ResizeObserver(apply);
+    const ro = new ResizeObserver(() => {
+      // Skip repositioning during theme transitions — causes jitter on the work page
+      if (document.documentElement.classList.contains('theme-transitioning')) return;
+      apply();
+    });
     ro.observe(grid);
     grid.querySelectorAll<HTMLElement>('.item-thumb').forEach((t) => ro.observe(t));
 

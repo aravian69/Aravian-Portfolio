@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Syne, Figtree, Syne_Mono } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import BackgroundVideo from '@/components/BackgroundVideo';
@@ -6,6 +7,10 @@ import PageMeta from '@/components/PageMeta';
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import TransitionLoader from '@/components/TransitionLoader';
+
+const syne = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-syne', display: 'swap' });
+const figtree = Figtree({ subsets: ['latin'], weight: ['300', '400', '500', '600'], variable: '--font-figtree', display: 'swap' });
+const syneMono = Syne_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-syne-mono', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Abdul Aziz — VFX, Motion & AI',
@@ -49,15 +54,9 @@ const ANTI_FOUC = `(function(){var t=localStorage.getItem('aa-theme')||(window.m
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${figtree.variable} ${syneMono.variable}`}>
       <head suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC }} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@300;400;500;600&family=Syne+Mono&display=swap"
-        />
       </head>
       <body>
         <CustomCursor />

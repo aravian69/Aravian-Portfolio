@@ -13,10 +13,10 @@
   --surface2: oklch(14% 0.022 303);
   --glass: rgba(255, 255, 255, 0.045);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'Figtree', sans-serif;
-  --font-mono: 'Syne Mono', monospace;
-  --font-pixel: 'Syne Mono', monospace;
+  --font-display: var(--font-syne), sans-serif;
+  --font-body: var(--font-figtree), sans-serif;
+  --font-mono: var(--font-syne-mono), monospace;
+  --font-pixel: var(--font-syne-mono), monospace;
   --sp-xs: 0.5rem;
   --sp-sm: 0.875rem;
   --sp-md: 1.5rem;
@@ -73,6 +73,15 @@ html.theme-transitioning *::after {
     border-color     0.5s  ease,
     box-shadow       0.5s  ease,
     opacity          0.5s  ease !important;
+}
+
+/* Masonry items show images — skip the heavy theme transition on them
+   to prevent GPU overload jitter on the work page */
+html.theme-transitioning .masonry-item,
+html.theme-transitioning .masonry-item *,
+html.theme-transitioning .masonry-item *::before,
+html.theme-transitioning .masonry-item *::after {
+  transition: none !important;
 }
 
 /* ── SCROLLBAR HIDDEN ── */
@@ -1883,6 +1892,7 @@ html[data-page="home"] body {
   .nav-links a { padding: 0.38rem 0.55rem; font-size: 0.72rem; }
   nav { padding: 0.85rem var(--sp-sm); }
   .nav-name svg { height: 36px; }
+  .nav-name img { height: 36px; width: auto; }
   .home-left { padding-top: 88px; }
 }
 
