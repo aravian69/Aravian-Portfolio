@@ -13,6 +13,12 @@ const figtree = Figtree({ subsets: ['latin'], weight: ['300', '400', '500', '600
 const syneMono = Syne_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-syne-mono', display: 'swap' });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/icon.svg',
+  },
   title: 'Abdul Aziz — VFX, Motion & AI',
   description:
     'VFX artist, motion designer, and AI video creator based in Jakarta. Specialising in color grading, motion graphics, and cinematic visual storytelling.',
