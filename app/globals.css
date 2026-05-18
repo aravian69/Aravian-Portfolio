@@ -1840,6 +1840,10 @@ html[data-page="home"] body {
   }
   /* Modal close — minimum 44px tap target */
   .modal-close { min-height: 44px; display: inline-flex; align-items: center; }
+  /* Modal text — smaller on mobile */
+  .project-modal-title { font-size: 0.95rem; letter-spacing: -0.01em; }
+  .project-modal-tag { font-size: 0.6rem; letter-spacing: 0.1em; }
+  .modal-close { font-size: 0.6rem; padding: 0.5rem 1rem; }
 }
 
 @media (max-width: 480px) {
