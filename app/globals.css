@@ -62,26 +62,60 @@ html, body {
   --accent2-rgb: 128, 0, 188;
 }
 
-/* ── THEME TRANSITION ── */
+/* ── THEME TRANSITION (GLITCH) ── */
+/* Kill all smooth fades — glitch overlay masks the hard cut */
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
-  transition:
-    background-color 0.55s ease,
-    background       0.55s ease,
-    color            0.5s  ease,
-    border-color     0.5s  ease,
-    box-shadow       0.5s  ease,
-    opacity          0.5s  ease !important;
+  transition: none !important;
 }
 
-/* Masonry items show images — skip the heavy theme transition on them
-   to prevent GPU overload jitter on the work page */
-html.theme-transitioning .masonry-item,
-html.theme-transitioning .masonry-item *,
-html.theme-transitioning .masonry-item *::before,
-html.theme-transitioning .masonry-item *::after {
-  transition: none !important;
+/* Glitch overlay — two stepped stripe layers */
+.theme-glitch {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+}
+.theme-glitch::before,
+.theme-glitch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+html.theme-transitioning .theme-glitch::before {
+  animation: glitch-a 360ms steps(1, end) forwards;
+}
+html.theme-transitioning .theme-glitch::after {
+  animation: glitch-b 360ms steps(1, end) forwards;
+}
+
+/* Lime stripes (brand accent) */
+@keyframes glitch-a {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; background: oklch(0.82 0.28 115); clip-path: inset(5%  0 88% 0); transform: translateX(-22px); }
+  17%  { opacity: 1; background: oklch(0.82 0.28 115); clip-path: inset(60% 0 22% 0); transform: translateX(16px);  }
+  25%  { opacity: 1; background: oklch(0.82 0.28 115); clip-path: inset(28% 0 62% 0); transform: translateX(-10px); }
+  33%  { opacity: 1; background: oklch(0.82 0.28 115); clip-path: inset(80% 0 5%  0); transform: translateX(20px);  }
+  42%  { opacity: 1; background: oklch(0.82 0.28 115); clip-path: inset(14% 0 74% 0); transform: translateX(-16px); }
+  50%  { opacity: 0.5; background: oklch(0.82 0.28 115); clip-path: inset(45% 0 42% 0); transform: translateX(8px); }
+  58%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Cyan stripes (offset timing, different positions) */
+@keyframes glitch-b {
+  0%   { opacity: 0; }
+  13%  { opacity: 0.65; background: oklch(0.72 0.2 195); clip-path: inset(48% 0 40% 0); transform: translateX(18px);  }
+  21%  { opacity: 0.65; background: oklch(0.72 0.2 195); clip-path: inset(18% 0 68% 0); transform: translateX(-14px); }
+  29%  { opacity: 0.65; background: oklch(0.72 0.2 195); clip-path: inset(72% 0 12% 0); transform: translateX(12px);  }
+  37%  { opacity: 0.65; background: oklch(0.72 0.2 195); clip-path: inset(33% 0 52% 0); transform: translateX(-20px); }
+  46%  { opacity: 0.35; background: oklch(0.72 0.2 195); clip-path: inset(8%  0 84% 0); transform: translateX(10px);  }
+  54%  { opacity: 0; }
+  100% { opacity: 0; }
 }
 
 /* ── SCROLLBAR HIDDEN ── */
