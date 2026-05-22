@@ -67,7 +67,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <CustomCursor />
         <TransitionLoader />
-        <div className="theme-glitch" aria-hidden="true" />
         <PageMeta />
         <BackgroundVideo />
         <div id="app">
