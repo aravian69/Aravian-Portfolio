@@ -192,4 +192,7 @@ export const projects: Project[] = [
   // AI — JUTA
   { id: 'ai22', title: 'JUTA', desc: 'AI Video 01', cat: 'ai', ratio: 'landscape', videoUrl: 'https://player.mediadelivery.net/play/657161/2f50021e-428e-41d4-810c-f4b67eed4687', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/2f50021e-428e-41d4-810c-f4b67eed4687/thumbnail.jpg' },
   { id: 'ai23', title: 'JUTA', desc: 'AI Video 02', cat: 'ai', ratio: 'landscape', videoUrl: 'https://player.mediadelivery.net/play/657161/8f2aa6da-74a3-421c-b6a0-20b1f0358873', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/8f2aa6da-74a3-421c-b6a0-20b1f0358873/thumbnail.jpg' },
+
+  // AI — Lervia
+  { id: 'ai24', title: 'Lervia', desc: 'AI Video', cat: 'ai', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/92cd4134-8940-4b11-a233-522e6ab459c5', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/92cd4134-8940-4b11-a233-522e6ab459c5/thumbnail.jpg' },
 ];
