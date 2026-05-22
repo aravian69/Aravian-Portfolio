@@ -84,67 +84,7 @@ html.theme-transitioning body {
   42%  { transform: translateX(-5px);  }
 }
 
-/* Full-width horizontal bands (lime / purple with glow) */
-.glitch-bar {
-  position: absolute;
-  left: -40px;
-  right: -40px;
-  animation: glitch-bar-flash 200ms steps(1, end) forwards;
-}
-
-@keyframes glitch-bar-flash {
-  0%   { opacity: 0.85; transform: translateX(-28px); }
-  33%  { opacity: 0;    transform: translateX(32px);  }
-  66%  { opacity: 0.55; transform: translateX(-18px); }
-  100% { opacity: 0;    transform: translateX(0);     }
-}
-
-/* Full-height vertical columns */
-.glitch-col {
-  position: absolute;
-  top: -40px;
-  bottom: -40px;
-  animation: glitch-col-flash 240ms steps(1, end) forwards;
-}
-
-@keyframes glitch-col-flash {
-  0%   { opacity: 0.8;  transform: translateY(-20px); }
-  33%  { opacity: 0;    transform: translateY(25px);  }
-  66%  { opacity: 0.5;  transform: translateY(-12px); }
-  100% { opacity: 0;    transform: translateY(0);     }
-}
-
-/* Scattered pixel blocks */
-.glitch-sq {
-  position: absolute;
-  animation: glitch-sq-pop 280ms steps(1, end) forwards;
-}
-
-@keyframes glitch-sq-pop {
-  0%   { opacity: 1;   transform: translate(0,     0);    }
-  25%  { opacity: 0;   transform: translate(-10px,  5px); }
-  50%  { opacity: 0.9; transform: translate(14px,  -6px); }
-  75%  { opacity: 0;   transform: translate(-6px,   9px); }
-  100% { opacity: 0;   transform: translate(0,     0);    }
-}
-
-/* Floating chars */
-.glitch-char {
-  position: absolute;
-  font-family: var(--font-mono), monospace;
-  font-size: 9px;
-  line-height: 1;
-  letter-spacing: 0;
-  white-space: nowrap;
-  animation: glitch-char-pop 260ms steps(1, end) forwards;
-}
-
-@keyframes glitch-char-pop {
-  0%   { opacity: 1;   }
-  35%  { opacity: 0;   }
-  65%  { opacity: 0.7; }
-  100% { opacity: 0;   }
-}
+/* canvas overlay is handled entirely in JS — no extra classes needed */
 
 /* ── SCROLLBAR HIDDEN ── */
 ::-webkit-scrollbar { display: none; }
