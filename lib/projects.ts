@@ -35,6 +35,10 @@ export interface Project {
   thumbnail?: string;
   /** Slideshow images. First image is used as the grid thumbnail unless `thumbnail` overrides it. */
   images?: string[];
+  /** Optional quick-facts shown in the project modal, e.g. 'After Effects + Blender'. */
+  tools?: string;
+  /** Optional year shown in the project modal. */
+  year?: number;
 }
 
 export const CATEGORIES: { id: FilterId; label: string }[] = [

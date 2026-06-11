@@ -44,6 +44,14 @@ export default function HomePage() {
             <span className="avail-dot" />
             Available for projects
           </div>
+          <div className="home-clients" aria-label="Selected clients">
+            <span className="home-clients-eyebrow">Selected clients</span>
+            <ul className="home-clients-list">
+              {['Le Minerale', 'Ichitan', 'Charm', 'Teh Celup Sosro', 'Amway', 'Tugu Insurance', 'Makuku', 'Mowilex'].map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className="home-right" />
       </div>

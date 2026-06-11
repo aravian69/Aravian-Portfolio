@@ -1735,12 +1735,24 @@ html[data-page="home"] body {
   color: var(--text);
 }
 
-.project-modal-tag {
+/* Quick-facts row: category · brief · tools · year, dot-separated */
+.project-modal-facts {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3rem 0;
+  list-style: none;
   font-family: var(--font-pixel);
   font-size: var(--tx-xs);
   letter-spacing: 0.14em;
   color: var(--accent2);
   text-transform: uppercase;
+}
+
+.project-modal-facts li + li::before {
+  content: '·';
+  margin: 0 0.55rem;
+  color: var(--muted);
 }
 
 .modal-close {
@@ -1862,7 +1874,7 @@ html[data-page="home"] body {
   .modal-close { min-height: 44px; display: inline-flex; align-items: center; }
   /* Modal text — smaller on mobile */
   .project-modal-title { font-size: 0.95rem; letter-spacing: -0.01em; }
-  .project-modal-tag { font-size: 0.6rem; letter-spacing: 0.1em; }
+  .project-modal-facts { font-size: 0.6rem; letter-spacing: 0.1em; }
   .modal-close { font-size: 0.6rem; padding: 0.5rem 1rem; }
 }
 
@@ -1919,6 +1931,130 @@ html[data-page="home"] body {
   .nav-name img { height: 36px; width: auto; }
   .home-left { padding-top: 88px; }
 }
+
+/* ── SELECTED CLIENTS (home) ── */
+.home-clients {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--sp-lg);
+  max-width: 46ch;
+}
+
+.home-clients-eyebrow {
+  display: block;
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 0.55rem;
+}
+
+.home-clients-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.home-clients-list li + li::before {
+  content: '·';
+  margin: 0 0.7rem;
+  color: var(--subtle);
+}
+
+/* Home is a fixed viewport; drop the strip when height gets tight */
+@media (max-height: 620px) {
+  .home-clients { display: none; }
+}
+
+/* ── AVAILABILITY BADGE (site-wide) ── */
+.avail-badge {
+  position: fixed;
+  left: 24px;
+  bottom: 72px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0 16px;
+  background: rgba(15, 15, 15, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.avail-badge:hover {
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+[data-theme="light"] .avail-badge {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 480px) {
+  .avail-badge {
+    left: 16px;
+    bottom: 64px;
+    font-size: 0.56rem;
+    padding: 0 12px;
+  }
+}
+
+/* ── FILTER-AWARE AMBIANCE (work) ──
+   A fixed glow behind the work page whose hue follows the active filter.
+   background-color transitions (gradients don't), so the tint is applied as
+   a solid color clipped by a static radial mask. */
+.work-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.work-page::before {
+  content: '';
+  position: fixed;
+  top: -25vh;
+  left: 50%;
+  width: min(110vw, 1400px);
+  height: 75vh;
+  transform: translateX(-50%);
+  background-color: var(--cat-glow, oklch(80% 0.19 128 / 0.07));
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black, transparent 70%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  transition: background-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .work-page::before { opacity: 0.55; }
+
+html[data-work-cat="vfx"]     { --cat-glow: oklch(72% 0.17 230 / 0.08); }
+html[data-work-cat="color"]   { --cat-glow: oklch(75% 0.16 60  / 0.08); }
+html[data-work-cat="motion"]  { --cat-glow: oklch(70% 0.19 303 / 0.08); }
+html[data-work-cat="ai"]      { --cat-glow: oklch(75% 0.14 190 / 0.08); }
+html[data-work-cat="editing"] { --cat-glow: oklch(70% 0.17 350 / 0.08); }
+html[data-work-cat="graphic"] { --cat-glow: oklch(82% 0.16 95  / 0.08); }
+html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -128,7 +128,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       </div>
       <div className="project-modal-meta">
         <span className="project-modal-title">{project.title}</span>
-        <span className="project-modal-tag">{project.desc ?? project.cat}</span>
+        <ul className="project-modal-facts">
+          <li>{CATEGORIES.find((c) => c.id === project.cat)?.label ?? project.cat}</li>
+          {project.desc && <li>{project.desc}</li>}
+          {project.tools && <li>{project.tools}</li>}
+          {project.year && <li>{project.year}</li>}
+        </ul>
       </div>
       <button ref={closeRef} className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
     </div>,
@@ -159,6 +164,13 @@ export default function MasonryGrid() {
   // Scroll to top of grid area whenever the filter changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeFilter]);
+
+  // Expose the active category so CSS can shift the page ambiance per filter
+  // (subtle glow hue behind the header — range reads as depth, not scatter).
+  useEffect(() => {
+    document.documentElement.dataset.workCat = activeFilter;
+    return () => { delete document.documentElement.dataset.workCat; };
   }, [activeFilter]);
 
   // Order is precomputed in lib/hueOrder.ts (see scripts/compute-hues.mjs), so

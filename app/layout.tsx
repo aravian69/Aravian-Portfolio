@@ -7,6 +7,7 @@ import PageMeta from '@/components/PageMeta';
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import TransitionLoader from '@/components/TransitionLoader';
+import AvailabilityBadge from '@/components/AvailabilityBadge';
 
 const syne = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-syne', display: 'swap' });
 const figtree = Figtree({ subsets: ['latin'], weight: ['300', '400', '500', '600'], variable: '--font-figtree', display: 'swap' });
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           {children}
           <Footer />
+          <AvailabilityBadge />
         </div>
         <div id="modal-root" />
       </body>
