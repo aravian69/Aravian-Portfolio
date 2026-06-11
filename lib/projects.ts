@@ -12,6 +12,9 @@
  *        thumbnail: bunnyThumb('your-guid')
  *   4. After setting a custom thumbnail in the Bunny dashboard, run `npm run thumbs`
  *      to auto-update the thumbnail filename in this file.
+ *   5. Run `npm run hues` so the new item gets a baked hue sort key
+ *      (lib/hueOrder.ts) and slots into the grid order without a load flash.
+ *      Items missing from hueOrder.ts still work — they just sort to the end.
  *
  * Adding a new image project (3D / graphic):
  *   - Use `thumbnail` for a single image, or `images: [...]` for a slideshow.
@@ -137,6 +140,8 @@ export const projects: Project[] = [
   { id: 'mg16', title: 'Charm',          desc: 'Motion Graphics 04', cat: 'motion', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/2d0357ca-c261-485a-9e1c-abe984b1df50', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/2d0357ca-c261-485a-9e1c-abe984b1df50/thumbnail.jpg' },
   { id: 'mg17', title: 'Charm',          desc: 'Motion Graphics 05', cat: 'motion', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/a353ce85-e4b7-4a6d-8a45-3676759912d9', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/a353ce85-e4b7-4a6d-8a45-3676759912d9/thumbnail.jpg' },
   { id: 'mg18', title: 'Charm',          desc: 'Motion Graphics 06', cat: 'motion', ratio: 'landscape', videoUrl: 'https://player.mediadelivery.net/play/657161/5b2a7ddf-805a-4172-9560-2f28146566b3', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/5b2a7ddf-805a-4172-9560-2f28146566b3/thumbnail.jpg' },
+  { id: 'mg27', title: 'Charm',          desc: 'Motion Graphics 07', cat: 'motion', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/e9c0650f-3bc1-4770-baca-b685750b1421', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/e9c0650f-3bc1-4770-baca-b685750b1421/thumbnail.jpg' },
+  { id: 'mg28', title: 'Charm',          desc: 'Motion Graphics 08', cat: 'motion', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/d7e867d7-1407-42b8-9110-2aabf4300ed3', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/d7e867d7-1407-42b8-9110-2aabf4300ed3/thumbnail.jpg' },
 
   // Motion Graphics — Teh Celup Sosro
   { id: 'mg19', title: 'Teh Celup Sosro', desc: 'Motion Graphics 01', cat: 'motion', ratio: 'portrait', videoUrl: 'https://player.mediadelivery.net/play/657161/63264d21-d215-40d7-af8a-ae95871d7b8f', thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/63264d21-d215-40d7-af8a-ae95871d7b8f/thumbnail.jpg' },

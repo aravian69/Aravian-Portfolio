@@ -8,7 +8,8 @@
     "start": "next start",
     "sync": "node scripts/sync-bunny.mjs",
     "sync:write": "node scripts/sync-bunny.mjs --write",
-    "thumbs": "node scripts/sync-thumbnails.mjs"
+    "thumbs": "node scripts/sync-thumbnails.mjs",
+    "hues": "node scripts/compute-hues.mjs"
   },
   "dependencies": {
     "next": "16.2.4",
