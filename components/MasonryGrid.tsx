@@ -9,12 +9,21 @@ import { HUE_ORDER } from '@/lib/hueOrder';
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
   const [slideIdx, setSlideIdx] = useState(0);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const slides = project.images && project.images.length > 0 ? project.images : null;
 
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
+  }, []);
+
+  // Move focus into the dialog on open, restore it to the trigger on close.
+  useEffect(() => {
+    const prevFocused = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    return () => prevFocused?.focus?.();
   }, []);
 
   useEffect(() => {
@@ -27,6 +36,16 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       if (slides) {
         if (e.key === 'ArrowRight') setSlideIdx((i) => (i + 1) % slides.length);
         if (e.key === 'ArrowLeft')  setSlideIdx((i) => (i - 1 + slides.length) % slides.length);
+      }
+      // Trap Tab focus within the dialog's controls.
+      if (e.key === 'Tab') {
+        const focusables = overlayRef.current?.querySelectorAll<HTMLElement>('button');
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && active === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
       }
     };
     window.addEventListener('keydown', onKey);
@@ -41,13 +60,18 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
   return createPortal(
     <div
+      ref={overlayRef}
       className="modal-overlay open"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className={`modal-inner project-modal-inner${project.ratio === 'portrait' ? ' project-modal-portrait' : ''}`}>
         {project.videoUrl ? (
           <iframe
             src={project.videoUrl}
+            title={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
             className={`project-modal-iframe${project.ratio === 'portrait' ? ' project-modal-iframe-portrait' : ''}`}
             allow="autoplay; fullscreen"
             allowFullScreen
@@ -106,7 +130,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         <span className="project-modal-title">{project.title}</span>
         <span className="project-modal-tag">{project.desc ?? project.cat}</span>
       </div>
-      <button className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
+      <button ref={closeRef} className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
     </div>,
     target
   );
@@ -149,6 +173,28 @@ export default function MasonryGrid() {
     );
   }, [activeFilter]);
 
+  // Lazily apply thumbnail backgrounds as cards approach the viewport, so a
+  // grid of ~90 items doesn't request every image up front.
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const thumbs = grid.querySelectorAll<HTMLElement>('[data-bg]');
+    const reveal = (el: HTMLElement) => {
+      if (el.dataset.bg) el.style.backgroundImage = `url(${el.dataset.bg})`;
+    };
+    if (!('IntersectionObserver' in window)) {
+      thumbs.forEach(reveal);
+      return;
+    }
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { reveal(e.target as HTMLElement); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '400px' });
+    thumbs.forEach((t) => io.observe(t));
+    return () => io.disconnect();
+  }, [filtered]);
+
   // Pinterest-style column-based masonry: each item is absolutely positioned
   // into the column (or pair of columns, for landscape) with the lowest
   // current top edge. Truly gap-free for mixed-width / mixed-height items.
@@ -174,31 +220,33 @@ export default function MasonryGrid() {
       const heights = new Array(cols).fill(0);
 
       // Landscape / square items get span-2 (big), portraits stay span-1.
-      const items = grid.querySelectorAll<HTMLElement>('.masonry-item');
-      items.forEach((el) => {
-        const isWide = el.classList.contains('masonry-item-landscape');
-        const span = Math.min(isWide ? 2 : 1, cols);
+      // Separate writes from reads to avoid layout thrashing: set every width
+      // first, read all heights in one batch, then position. Heights stay valid
+      // because item height depends only on width (CSS aspect-ratio), not on
+      // where the item is placed.
+      const items = [...grid.querySelectorAll<HTMLElement>('.masonry-item')];
+      const spans = items.map((el) =>
+        Math.min(el.classList.contains('masonry-item-landscape') ? 2 : 1, cols)
+      );
+      items.forEach((el, i) => {
+        const span = spans[i];
+        el.style.width = `${colW * span + gap * (span - 1)}px`;
+      });
+      const measuredHeights = items.map((el) => el.offsetHeight);
+      items.forEach((el, i) => {
+        const span = spans[i];
 
         let bestCol = 0;
         let bestH = Infinity;
         for (let c = 0; c <= cols - span; c++) {
           const h = Math.max(...heights.slice(c, c + span));
-          if (h < bestH) {
-            bestH = h;
-            bestCol = c;
-          }
+          if (h < bestH) { bestH = h; bestCol = c; }
         }
 
-        const itemW = colW * span + gap * (span - 1);
-        const x = padL + bestCol * (colW + gap);
-        const y = padT + bestH;
+        el.style.left = `${padL + bestCol * (colW + gap)}px`;
+        el.style.top = `${padT + bestH}px`;
 
-        el.style.width = `${itemW}px`;
-        el.style.left = `${x}px`;
-        el.style.top = `${y}px`;
-
-        const measured = el.offsetHeight;
-        const newH = bestH + measured + gap;
+        const newH = bestH + measuredHeights[i] + gap;
         for (let c = bestCol; c < bestCol + span; c++) heights[c] = newH;
       });
 
@@ -249,12 +297,11 @@ export default function MasonryGrid() {
     return () => ro.disconnect();
   }, [filtered]);
 
-  function getThumbStyle(item: Project) {
-    const src = item.thumbnail ?? item.images?.[0];
-    if (src) {
-      return { backgroundImage: `url(${src})`, backgroundSize: 'cover', backgroundPosition: 'center' };
-    }
-    return { background: '#131313' };
+  // Thumbnails are applied lazily by the IntersectionObserver effect above, so
+  // the grid doesn't fire ~90 image requests on first paint. Height comes from
+  // aspect-ratio in CSS, so deferring the image never shifts the layout.
+  function thumbSrc(item: Project) {
+    return item.thumbnail ?? item.images?.[0] ?? null;
   }
 
   return (
@@ -295,7 +342,13 @@ export default function MasonryGrid() {
               key={`${activeFilter}-${item.id}`}
               className={`masonry-item${item.ratio !== 'portrait' ? ' masonry-item-landscape' : ''}`}
               style={{ animationDelay: `${idx * CARD_STAGGER_MS}ms` }}
+              role="button"
+              tabIndex={0}
+              aria-label={`Open ${item.title}${item.desc ? ` — ${item.desc}` : ''} (${item.cat})`}
               onClick={() => setSelected(item)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(item); }
+              }}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const dx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
@@ -310,12 +363,16 @@ export default function MasonryGrid() {
               <div className="item-media">
                 <div
                   className={`item-thumb ${item.ratio}`}
-                  style={getThumbStyle(item)}
+                  data-bg={thumbSrc(item) ?? undefined}
+                  style={thumbSrc(item)
+                    ? { backgroundSize: 'cover', backgroundPosition: 'center' }
+                    : { background: 'var(--surface)' }}
                 />
                 {/* Blurred duplicate — masked to bottom, creates gradient-blur effect */}
                 <div
                   className="item-thumb-blur"
-                  style={getThumbStyle(item)}
+                  data-bg={thumbSrc(item) ?? undefined}
+                  style={thumbSrc(item) ? undefined : { background: 'var(--surface)' }}
                 />
                 {item.images && item.images.length > 1 && (
                   <div className="item-stack-badge" aria-hidden="true">

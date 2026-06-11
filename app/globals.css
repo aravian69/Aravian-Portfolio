@@ -718,11 +718,12 @@ nav {
 
 .work-title {
   font-family: var(--font-display);
-  font-size: var(--tx-2xl);
+  /* Fluid hero: commands the fold on desktop, scales down cleanly on mobile */
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: var(--sp-lg);
-  line-height: 1;
+  line-height: 0.95;
 }
 
 .filter-tabs {
@@ -743,7 +744,7 @@ nav {
   font-family: var(--font-body);
   font-size: var(--tx-xs);
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.18s;
@@ -880,7 +881,7 @@ nav {
   font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
+  color: oklch(98% 0.005 303 / 0.6);
 }
 
 .grid-spacer::after {
@@ -919,6 +920,11 @@ nav {
   /* smooth tilt reset */
   transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transform-style: preserve-3d;
+}
+/* Promote to its own layer only while interacting — promoting all ~90 cards
+   at once is needless GPU memory pressure. */
+.masonry-item:hover,
+.masonry-item:focus-visible {
   will-change: transform;
 }
 
@@ -1052,6 +1058,12 @@ nav {
 .landscape { aspect-ratio: 16 / 9; }
 .square    { aspect-ratio: 1 / 1; }
 
+/* The blurred duplicate is a desktop nicety. Roughly 90 live blur(18px) layers
+   tax mobile GPUs, and the caption gradient already carries text legibility. */
+@media (max-width: 768px) {
+  .item-thumb-blur { display: none; }
+}
+
 /* Blurred image duplicate — same background, blurred, masked to bottom portion */
 .item-thumb-blur {
   position: absolute;
@@ -1080,8 +1092,8 @@ nav {
   justify-content: flex-end;
   gap: 2px;
   background: linear-gradient(to top,
-    rgba(0,0,0,0.65) 0%,
-    rgba(0,0,0,0.2) 50%,
+    rgba(0,0,0,0.78) 0%,
+    rgba(0,0,0,0.32) 45%,
     transparent 80%
   );
   border-radius: 0 0 4px 4px;
@@ -1102,20 +1114,28 @@ nav {
   color: var(--accent2);
   transition: color 0.3s ease;
 }
-/* Light mode: title is big enough for purple; small labels stay white */
-[data-theme="light"] .masonry-item:hover .item-title {
+/* Keyboard focus gets the same emphasis as hover, so tabbing through the grid
+   reads as clearly as pointing at it. */
+.masonry-item:focus-visible .item-title { color: var(--accent); }
+.masonry-item:focus-visible .item-cat,
+.masonry-item:focus-visible .item-desc { color: var(--accent2); }
+/* Light mode: title is big enough for purple; small labels stay near-white */
+[data-theme="light"] .masonry-item:hover .item-title,
+[data-theme="light"] .masonry-item:focus-visible .item-title {
   color: var(--accent);
 }
 [data-theme="light"] .masonry-item:hover .item-cat,
-[data-theme="light"] .masonry-item:hover .item-desc {
-  color: rgba(255,255,255,0.75);
+[data-theme="light"] .masonry-item:hover .item-desc,
+[data-theme="light"] .masonry-item:focus-visible .item-cat,
+[data-theme="light"] .masonry-item:focus-visible .item-desc {
+  color: oklch(98% 0.005 303 / 0.82);
 }
 
 .item-cat {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.55);
+  color: oklch(98% 0.005 303 / 0.82);
   text-transform: uppercase;
 }
 
@@ -1124,8 +1144,8 @@ nav {
   font-size: clamp(0.9rem, 1.8vw, 1.15rem);
   font-weight: 800;
   letter-spacing: 0.04em;
-  line-height: 1.1;
-  color: #fff;
+  line-height: 1.18;
+  color: oklch(98% 0.005 303);
   text-transform: uppercase;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1136,9 +1156,9 @@ nav {
 
 .item-desc {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.45);
+  color: oklch(98% 0.005 303 / 0.75);
   text-transform: uppercase;
   margin-top: 2px;
   white-space: nowrap;
