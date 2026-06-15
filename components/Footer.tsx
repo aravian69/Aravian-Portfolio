@@ -1,6 +1,10 @@
 export default function Footer() {
   return (
     <footer className="site-footer">
+      <a className="footer-avail" href="/contact">
+        <span className="avail-dot" />
+        Available for projects
+      </a>
       <a
         className="social-link"
         href="https://instagram.com/aziizaravian"
