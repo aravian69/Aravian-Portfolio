@@ -10,6 +10,12 @@ export const metadata: Metadata = {
 
 const catLabel = (id: string) => CATEGORIES.find((c) => c.id === id)?.label ?? id;
 
+// GitHub mode routes go through /branch/<default>; local mode omits the branch.
+const KS_BASE =
+  process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB === 'true'
+    ? '/keystatic/branch/main/collection/projects'
+    : '/keystatic/collection/projects';
+
 export default async function ManagePage() {
   const projects = await getProjects();
 
@@ -19,8 +25,8 @@ export default async function ManagePage() {
         <span className={styles.title}>Manage Projects</span>
         <span className={styles.count}>{projects.length} items</span>
         <span className={styles.spacer} />
-        <a className={styles.btn} href="/keystatic/collection/projects">List view</a>
-        <a className={styles.btnPrimary + ' ' + styles.btn} href="/keystatic/collection/projects/create">
+        <a className={styles.btn} href={KS_BASE}>List view</a>
+        <a className={styles.btnPrimary + ' ' + styles.btn} href={`${KS_BASE}/create`}>
           ＋ Add new
         </a>
       </div>
@@ -33,7 +39,7 @@ export default async function ManagePage() {
             <a
               key={p.id}
               className={styles.card}
-              href={`/keystatic/collection/projects/item/${encodeURIComponent(p.id)}`}
+              href={`${KS_BASE}/item/${encodeURIComponent(p.id)}`}
             >
               <div
                 className={styles.thumb}
