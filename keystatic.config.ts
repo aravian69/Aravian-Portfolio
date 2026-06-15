@@ -1,4 +1,4 @@
-import { config, collection, fields } from '@keystatic/core';
+import { config, collection, singleton, fields } from '@keystatic/core';
 
 export default config({
   // Defaults to local-filesystem editing so the site always builds. Set the
@@ -60,6 +60,21 @@ export default config({
         ),
         tools: fields.text({ label: 'Tools used', description: 'Optional, e.g. "After Effects + Blender"' }),
         year: fields.integer({ label: 'Year', description: 'Optional' }),
+      },
+    }),
+  },
+
+  singletons: {
+    home: singleton({
+      label: 'Home page',
+      path: 'content/home',
+      format: { data: 'yaml' },
+      schema: {
+        showreelUrl: fields.url({
+          label: 'Showreel video URL',
+          description:
+            'The video shown in the "Watch Showreel" popup. Paste a Bunny / YouTube / Vimeo embed (player) URL. Leave blank to show a placeholder.',
+        }),
       },
     }),
   },

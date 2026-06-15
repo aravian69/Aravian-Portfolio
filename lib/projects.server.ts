@@ -31,3 +31,9 @@ export async function getProjects(): Promise<Project[]> {
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
 }
+
+/** Read the home-page showreel video URL from the Keystatic singleton. */
+export async function getShowreelUrl(): Promise<string | null> {
+  const home = await reader.singletons.home.read();
+  return home?.showreelUrl || null;
+}
