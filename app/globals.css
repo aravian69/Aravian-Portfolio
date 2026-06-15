@@ -643,20 +643,6 @@ nav {
   background: radial-gradient(ellipse 90% 80% at 65% 55%, rgba(var(--accent2-rgb), 0.07) 0%, transparent 65%);
 }
 
-.home-avail {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-pixel);
-  font-size: var(--tx-xs);
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: var(--sp-md);
-}
-
 .avail-dot {
   position: relative;
   width: 7px;
@@ -1853,7 +1839,7 @@ html[data-page="home"] body {
 .home-page .home-title   { animation: cineFadeUp 0.85s cubic-bezier(0.16,1,0.3,1) 0.08s both; }
 .home-page .home-lead    { animation: cineFadeUp 0.7s  cubic-bezier(0.16,1,0.3,1) 0.2s  both; }
 .home-page .home-actions { animation: cineFadeUp 0.65s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
-.home-page .home-avail   { animation: cineFadeUp 0.6s  cubic-bezier(0.16,1,0.3,1) 0.42s both; }
+.home-page .home-clients { animation: cineFadeUp 0.6s  cubic-bezier(0.16,1,0.3,1) 0.42s both; }
 
 /* ── RESPONSIVE ── */
 /* Masonry column count is handled in JS; only spacing changes here. */

@@ -40,10 +40,6 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
               View Work
             </Link>
           </div>
-          <div className="home-avail">
-            <span className="avail-dot" />
-            Available for projects
-          </div>
           <div className="home-clients" aria-label="Selected clients">
             <span className="home-clients-eyebrow">Selected clients</span>
             <ul className="home-clients-list">
