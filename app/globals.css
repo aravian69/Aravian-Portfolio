@@ -1574,6 +1574,7 @@ html[data-page="home"] body {
   width: calc(80vh * 9 / 16);
   height: 80vh;
   aspect-ratio: unset;
+  display: block; /* remove inline baseline gap that showed as a black line below the player */
 }
 
 .project-modal-image {
