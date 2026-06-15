@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES, Project, projects } from '@/lib/projects';
+import { CATEGORIES, Project } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
 
 
@@ -156,7 +156,7 @@ const COL_BREAKPOINTS: [number, number][] = [
   [1440, 5],
 ];
 
-export default function MasonryGrid() {
+export default function MasonryGrid({ projects }: { projects: Project[] }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selected, setSelected] = useState<Project | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -183,7 +183,7 @@ export default function MasonryGrid() {
     return [...base].sort(
       (a, b) => (HUE_ORDER[a.id] ?? HUE_FALLBACK) - (HUE_ORDER[b.id] ?? HUE_FALLBACK)
     );
-  }, [activeFilter]);
+  }, [activeFilter, projects]);
 
   // Lazily apply thumbnail backgrounds as cards approach the viewport, so a
   // grid of ~90 items doesn't request every image up front.

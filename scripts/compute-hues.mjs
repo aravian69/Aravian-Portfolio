@@ -21,9 +21,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sharp from 'sharp';
 
-const __dir   = path.dirname(fileURLToPath(import.meta.url));
-const tsPath  = path.join(__dir, '..', 'lib', 'projects.ts');
-const outPath = path.join(__dir, '..', 'lib', 'hueOrder.ts');
+const __dir       = path.dirname(fileURLToPath(import.meta.url));
+const contentDir  = path.join(__dir, '..', 'content', 'projects');
+const outPath     = path.join(__dir, '..', 'lib', 'hueOrder.ts');
 
 // ── Constants (keep in sync with MasonryGrid.tsx) ──────────────────────────
 const SWATCH_SIZE        = 24;
@@ -60,19 +60,18 @@ function clImg(url, transforms = 'w_1200,q_auto,f_auto') {
   return url.replace('/upload/', `/upload/${transforms}/`);
 }
 
-// ── Parse id + thumbnail URL out of projects.ts ────────────────────────────
-function parseProjects(src) {
+// ── Read id + thumbnail URL from the Keystatic YAML content files ──────────
+function parseProjects() {
   const out = [];
-  // Split on entry boundaries; each entry starts with "{ id:"
-  const entries = src.split(/\{\s*id:/).slice(1);
-  for (const chunk of entries) {
-    const id = chunk.match(/^\s*'([^']+)'/)?.[1];
-    if (!id) continue;
-    // Prefer explicit thumbnail, else first image in an images: [...] array.
-    let m = chunk.match(/thumbnail:\s*(?:clImg\(\s*)?'([^']+)'/);
-    if (!m) m = chunk.match(/images:\s*\[\s*(?:clImg\(\s*)?'([^']+)'/);
-    if (!m) { out.push({ id, url: null }); continue; }
-    out.push({ id, url: clImg(m[1]) });
+  if (!fs.existsSync(contentDir)) return out;
+  for (const file of fs.readdirSync(contentDir)) {
+    if (!file.endsWith('.yaml')) continue;
+    const id = file.replace(/\.yaml$/, '');
+    const text = fs.readFileSync(path.join(contentDir, file), 'utf8');
+    // Prefer an explicit thumbnail, else the first image in the images: list.
+    let m = text.match(/^thumbnail:\s*"([^"]+)"/m);
+    if (!m) m = text.match(/^images:\s*\n\s*-\s*"([^"]+)"/m);
+    out.push({ id, url: m ? clImg(m[1]) : null });
   }
   return out;
 }
@@ -108,8 +107,7 @@ async function sampleUrl(url) {
 }
 
 async function main() {
-  const src = fs.readFileSync(tsPath, 'utf8');
-  const items = parseProjects(src);
+  const items = parseProjects();
   console.log(`\n🎨  Sampling ${items.length} thumbnails…\n`);
 
   const order = {};
@@ -148,4 +146,6 @@ ${body}
   console.log(`\n✅  Wrote lib/hueOrder.ts — ${ok} sampled, ${miss} unsortable.\n`);
 }
 
-main().catch((e) => { console.error('\n❌ ', e); process.exit(1); });
+// Never fail the build over hue ordering — a missing/partial hueOrder just
+// sends affected items to the end of the grid.
+main().catch((e) => { console.error('\n⚠️  compute-hues skipped:', e?.message ?? e); });

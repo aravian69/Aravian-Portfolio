@@ -1,13 +1,5 @@
 import type { Metadata } from 'next';
 import { Syne, Figtree, Syne_Mono } from 'next/font/google';
-import './globals.css';
-import Nav from '@/components/Nav';
-import BackgroundVideo from '@/components/BackgroundVideo';
-import PageMeta from '@/components/PageMeta';
-import Footer from '@/components/Footer';
-import CustomCursor from '@/components/CustomCursor';
-import TransitionLoader from '@/components/TransitionLoader';
-import AvailabilityBadge from '@/components/AvailabilityBadge';
 
 const syne = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-syne', display: 'swap' });
 const figtree = Figtree({ subsets: ['latin'], weight: ['300', '400', '500', '600'], variable: '--font-figtree', display: 'swap' });
@@ -66,16 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC }} />
       </head>
       <body>
-        <CustomCursor />
-        <TransitionLoader />
-        <PageMeta />
-        <BackgroundVideo />
-        <div id="app">
-          <Nav />
-          {children}
-          <Footer />
-          <AvailabilityBadge />
-        </div>
+        {children}
         <div id="modal-root" />
       </body>
     </html>

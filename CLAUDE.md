@@ -12,8 +12,11 @@
 |---|---|
 | `app/layout.tsx` | Root layout, metadata (title, OG, favicon icons), font imports, anti-FOUC script |
 | `app/globals.css` | All global styles, CSS variables for dark/light theme, theme-transition class |
-| `app/page.tsx` | Homepage — hero, masonry grid, project cards |
-| `lib/projects.ts` | **Master project list** — add new projects here |
+| `app/(site)/page.tsx` | Homepage — hero, client strip, CTAs |
+| `content/projects/*.yaml` | **Project content** — managed via the Keystatic CMS at `/keystatic` (no code) |
+| `keystatic.config.ts` | CMS schema + storage config (see `SETUP-CMS.md`) |
+| `lib/projects.ts` | Project types + `CATEGORIES` (client-safe) |
+| `lib/projects.server.ts` | `getProjects()` — reads the CMS content at build/server time |
 | `components/Nav.tsx` | Nav bar, theme toggle (dark/light), mobile menu |
 | `components/BackgroundVideo.tsx` | Ambient background video (loops silently) |
 | `components/CustomCursor.tsx` | Custom cursor logic |
@@ -26,18 +29,23 @@
 
 ## Adding a New Project
 
-All projects live in `lib/projects.ts`. Each entry is a typed object:
+Use the **Keystatic CMS** at `/keystatic` (no code). Click **+ Create**, fill the
+form (title, category, orientation, Bunny video URL, thumbnail, optional tools/year),
+and Publish. Each project is stored as a YAML file in `content/projects/`.
+See `SETUP-CMS.md` for the one-time GitHub connection that makes publishing live.
 
-```ts
-{
-  id: 'unique_id',        // kebab-case string, no duplicates
-  title: 'Project Name',
-  desc: 'Short label',    // shown as tag in UI (e.g. 'AI Video', 'VFX', 'Color Grade')
-  cat: 'ai',              // category: 'ai' | 'vfx' | 'motion' | 'grade'
-  ratio: 'portrait',      // 'portrait' (9:16) | 'landscape' (16:9) | 'square'
-  videoUrl: 'https://player.mediadelivery.net/play/657161/<VIDEO_GUID>',
-  thumbnail: 'https://vz-cbc45619-72d.b-cdn.net/<VIDEO_GUID>/thumbnail.jpg',
-}
+Editing the YAML directly still works. Each `content/projects/<id>.yaml` is:
+
+```yaml
+title: "Project Name"
+cat: ai            # vfx | color | motion | ai | editing | graphic | 3d
+ratio: portrait    # portrait (9:16) | landscape (16:9) | square
+desc: "Short label"
+videoUrl: "https://player.mediadelivery.net/play/657161/<VIDEO_GUID>"
+thumbnail: "https://vz-cbc45619-72d.b-cdn.net/<VIDEO_GUID>/thumbnail.jpg"
+images: []
+tools: ""
+year: null
 ```
 
 ### Bunny CDN — Finding Video GUIDs

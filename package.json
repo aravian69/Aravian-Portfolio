@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/compute-hues.mjs",
     "build": "next build",
     "start": "next start",
     "sync": "node scripts/sync-bunny.mjs",
@@ -12,6 +13,8 @@
     "hues": "node scripts/compute-hues.mjs"
   },
   "dependencies": {
+    "@keystatic/core": "^0.5.50",
+    "@keystatic/next": "^5.0.4",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
