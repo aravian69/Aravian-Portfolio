@@ -1500,11 +1500,38 @@ html[data-page="home"] body {
   gap: var(--sp-md);
   opacity: 0;
   pointer-events: none;
-  transform: scale(1.03);
-  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-overlay.open { opacity: 1; pointer-events: all; transform: scale(1); }
+/* The overlay mounts already in `.open`, so use keyframe animations (which play
+   on mount) rather than transitions (which need a prior state to animate from). */
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+  animation: modalOverlayIn 0.3s ease both;
+}
+
+.modal-overlay.open .modal-inner {
+  animation: modalPopIn 0.44s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.modal-overlay.open .project-modal-meta,
+.modal-overlay.open .modal-close {
+  animation: modalRise 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.07s both;
+}
+
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.965); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes modalRise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 [data-theme="light"] .modal-overlay { background: rgba(240, 236, 228, 0.97); }
 
 .modal-inner {
