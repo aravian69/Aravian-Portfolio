@@ -1426,8 +1426,10 @@ html[data-page="home"] body {
 }
 
 /* ── HOME: pin footer ── */
-[data-page="home"] .site-footer,
-[data-page="work"] .site-footer {
+/* Home is a no-scroll viewport page, so its footer must be pinned to stay
+   visible. Every other page (work, about, contact) uses a normal footer that
+   sits at the end of the content instead of floating over it. */
+[data-page="home"] .site-footer {
   position: fixed;
   bottom: 0;
   left: 0;
