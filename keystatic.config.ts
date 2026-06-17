@@ -22,6 +22,11 @@ export default config({
       slugField: 'title',
       columns: ['title', 'cat'],
       schema: {
+        hidden: fields.checkbox({
+          label: 'Hide from site',
+          description: 'When on, this project is hidden from the public site (Work grid). It stays in the CMS so you can show it again anytime.',
+          defaultValue: false,
+        }),
         title: fields.slug({
           name: { label: 'Title', validation: { isRequired: true } },
           slug: {

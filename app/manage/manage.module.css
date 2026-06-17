@@ -111,6 +111,41 @@
   backdrop-filter: blur(4px);
 }
 
+.hiddenBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ff8a8a;
+  backdrop-filter: blur(4px);
+}
+
+/* Hidden projects stay visible in /manage but read as muted so it's obvious
+   they're off the live site. The thumbnail desaturates; hover restores it. */
+.cardHidden {
+  border-style: dashed;
+  border-color: #34343d;
+}
+.cardHidden .thumb {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+  transition: opacity 0.18s ease, filter 0.18s ease;
+}
+.cardHidden:hover .thumb {
+  opacity: 1;
+  filter: none;
+}
+.cardHidden .cardTitle,
+.cardHidden .cardDesc {
+  opacity: 0.6;
+}
+
 .editHint {
   position: absolute;
   inset: 0;

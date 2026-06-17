@@ -25,6 +25,8 @@ export interface Project {
   tools?: string;
   /** Optional year shown in the project modal. */
   year?: number;
+  /** When true, hidden from the public site but still editable in the CMS / /manage. */
+  hidden?: boolean;
 }
 
 export const CATEGORIES: { id: FilterId; label: string }[] = [

@@ -7,11 +7,12 @@ import type { Project, Category, Ratio } from '@/lib/projects';
 const reader = createReader(process.cwd(), keystaticConfig);
 
 /**
- * Read every project from the Keystatic content store and map it to the
- * Project shape the UI expects. clImg() re-applies the Cloudinary transform
- * to stored raw image URLs (and passes non-Cloudinary URLs through unchanged).
+ * Read every project from the Keystatic content store — including ones marked
+ * hidden — and map each to the Project shape the UI expects. clImg() re-applies
+ * the Cloudinary transform to stored raw image URLs (and passes non-Cloudinary
+ * URLs through unchanged). Used by /manage so hidden items stay editable.
  */
-export async function getProjects(): Promise<Project[]> {
+export async function getAllProjects(): Promise<Project[]> {
   const entries = await reader.collections.projects.all();
   return entries
     .map(({ slug, entry }): Project => ({
@@ -28,8 +29,18 @@ export async function getProjects(): Promise<Project[]> {
           : undefined,
       tools: entry.tools || undefined,
       year: entry.year ?? undefined,
+      hidden: entry.hidden ?? false,
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/**
+ * Public-facing projects: everything except items marked hidden in the CMS.
+ * Used by the Work grid and anywhere the live site lists projects.
+ */
+export async function getProjects(): Promise<Project[]> {
+  const all = await getAllProjects();
+  return all.filter((p) => !p.hidden);
 }
 
 /** Read the home-page showreel video URL from the Keystatic singleton. */
