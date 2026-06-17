@@ -1,3 +1,12 @@
+/* This route uses the root layout (not the site layout that imports globals.css),
+   so the browser's default body margin + light canvas show as a white frame
+   around the page. Reset it here — this module only loads on /manage. */
+:global(html),
+:global(body) {
+  margin: 0;
+  background: #0d0d10;
+}
+
 .shell {
   min-height: 100vh;
   background: #0d0d10;
