@@ -115,6 +115,9 @@
   position: absolute;
   top: 8px;
   right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 3px 8px;
   border-radius: 999px;
   font-size: 0.6rem;
@@ -124,6 +127,9 @@
   background: rgba(0, 0, 0, 0.6);
   color: #ff8a8a;
   backdrop-filter: blur(4px);
+}
+.hiddenBadge svg {
+  flex-shrink: 0;
 }
 
 /* Hidden projects stay visible in /manage but read as muted so it's obvious
