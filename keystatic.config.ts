@@ -58,6 +58,14 @@ export default config({
         }),
         desc: fields.text({ label: 'Short description', description: 'e.g. "Motion Graphics 07"' }),
         videoUrl: fields.url({ label: 'Video URL', description: 'Bunny player link (leave blank for image-only projects)' }),
+        beforeVideoUrl: fields.url({
+          label: 'Before video (.mp4) — comparison slider',
+          description: 'Optional. Raw / green-screen plate as a DIRECT .mp4 link (Bunny → enable "MP4 Fallback"). Fill BOTH this and the After field below to show a drag-to-compare before/after slider instead of the normal player.',
+        }),
+        afterVideoUrl: fields.url({
+          label: 'After video (.mp4) — comparison slider',
+          description: 'Optional. Final composite as a DIRECT .mp4 link, same length / size / fps as the Before video.',
+        }),
         thumbnail: fields.url({ label: 'Thumbnail image URL' }),
         images: fields.array(
           fields.url({ label: 'Image URL' }),

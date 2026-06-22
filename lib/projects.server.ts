@@ -22,6 +22,8 @@ export async function getAllProjects(): Promise<Project[]> {
       cat: entry.cat as Category,
       ratio: entry.ratio as Ratio,
       videoUrl: entry.videoUrl || undefined,
+      beforeVideoUrl: entry.beforeVideoUrl || undefined,
+      afterVideoUrl: entry.afterVideoUrl || undefined,
       thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
       images:
         entry.images && entry.images.length

@@ -18,6 +18,10 @@ export interface Project {
   cat:       Category;
   ratio:     Ratio;
   videoUrl?: string;
+  /** Direct .mp4 of the raw/before plate. When set with afterVideoUrl, the modal shows a before/after slider. */
+  beforeVideoUrl?: string;
+  /** Direct .mp4 of the final/after composite, paired with beforeVideoUrl. */
+  afterVideoUrl?: string;
   thumbnail?: string;
   /** Slideshow images. First image is used as the grid thumbnail unless `thumbnail` overrides it. */
   images?: string[];

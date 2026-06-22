@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CATEGORIES, Project } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
+import BeforeAfterVideo from '@/components/BeforeAfterVideo';
 
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
@@ -12,6 +13,9 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
+  const compare = project.beforeVideoUrl && project.afterVideoUrl
+    ? { before: project.beforeVideoUrl, after: project.afterVideoUrl }
+    : null;
   const slides = project.images && project.images.length > 0 ? project.images : null;
 
   useEffect(() => {
@@ -68,7 +72,13 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className={`modal-inner project-modal-inner${project.ratio === 'portrait' ? ' project-modal-portrait' : ''}`}>
-        {project.videoUrl ? (
+        {compare ? (
+          <BeforeAfterVideo
+            beforeSrc={compare.before}
+            afterSrc={compare.after}
+            portrait={project.ratio === 'portrait'}
+          />
+        ) : project.videoUrl ? (
           <iframe
             src={project.videoUrl}
             title={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
