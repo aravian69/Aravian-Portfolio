@@ -6,18 +6,25 @@ import type { Project, Category, Ratio } from '@/lib/projects';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
+// Bunny CDN host for this library — used to build direct MP4 URLs when only the
+// player URL is available (most cards derive the MP4 from the thumbnail instead).
+const BUNNY_CDN_HOST = 'vz-cbc45619-72d.b-cdn.net';
+const GUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+
 /**
  * Bunny serves a direct 720p MP4 next to every video's thumbnail.jpg (MP4
- * fallback). Derive it from the stored thumbnail so grid cards can play the real
- * footage on hover with no extra CMS fields. 720p already exceeds the card's
- * display size, so it looks sharp while staying light. Returns undefined for
- * non-Bunny thumbnails (image-only projects keep their static thumbnail).
+ * fallback). Derive it so grid cards can play the real footage on hover, and the
+ * modal can play it natively (far faster to start than the iframe player). 720p
+ * already exceeds both surfaces' display size, so it looks sharp while staying
+ * light. Prefers the thumbnail (same id); falls back to the video URL's id.
+ * Returns undefined when neither yields a Bunny id (keeps the static thumbnail).
  */
-function bunnyHoverVideo(thumbnail?: string | null): string | undefined {
-  if (!thumbnail) return undefined;
-  return /\.b-cdn\.net\/[^/]+\/thumbnail\.jpg$/.test(thumbnail)
-    ? thumbnail.replace(/\/thumbnail\.jpg$/, '/play_720p.mp4')
-    : undefined;
+function bunnyDirectVideo(thumbnail?: string | null, videoUrl?: string): string | undefined {
+  if (thumbnail && /\.b-cdn\.net\/[^/]+\/thumbnail\.jpg$/.test(thumbnail)) {
+    return thumbnail.replace(/\/thumbnail\.jpg$/, '/play_720p.mp4');
+  }
+  const guid = videoUrl?.match(GUID_RE)?.[0];
+  return guid ? `https://${BUNNY_CDN_HOST}/${guid}/play_720p.mp4` : undefined;
 }
 
 /**
@@ -39,7 +46,7 @@ export async function getAllProjects(): Promise<Project[]> {
       beforeVideoUrl: entry.beforeVideoUrl || undefined,
       afterVideoUrl: entry.afterVideoUrl || undefined,
       thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
-      hoverVideoUrl: bunnyHoverVideo(entry.thumbnail),
+      directVideoUrl: bunnyDirectVideo(entry.thumbnail, entry.videoUrl || undefined),
       images:
         entry.images && entry.images.length
           ? entry.images.filter((u): u is string => !!u).map((u) => clImg(u))

@@ -1682,6 +1682,13 @@ html[data-page="home"] body {
   display: block; /* remove inline baseline gap that showed as a black line below the player */
 }
 
+/* Native modal player — reuses the iframe sizing classes; contain keeps the full
+   frame visible without distortion, dark backing fills any letterbox bars. */
+.project-modal-video {
+  object-fit: contain;
+  background: oklch(4% 0.012 303);
+}
+
 .project-modal-image {
   width: 100%;
   height: auto;

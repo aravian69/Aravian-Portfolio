@@ -78,6 +78,17 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             afterSrc={compare.after}
             portrait={project.ratio === 'portrait'}
           />
+        ) : project.directVideoUrl ? (
+          // Native video: starts immediately (no iframe-player bootstrap) and is
+          // usually already cached from the grid-card hover.
+          <video
+            src={project.directVideoUrl}
+            poster={project.thumbnail ?? undefined}
+            className={`project-modal-iframe project-modal-video${project.ratio === 'portrait' ? ' project-modal-iframe-portrait' : ''}`}
+            controls
+            autoPlay
+            playsInline
+          />
         ) : project.videoUrl ? (
           <iframe
             src={project.videoUrl}
@@ -416,10 +427,10 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
                   data-bg={thumbSrc(item) ?? undefined}
                   style={thumbSrc(item) ? undefined : { background: 'var(--surface)' }}
                 />
-                {item.hoverVideoUrl && (
+                {item.directVideoUrl && (
                   <video
                     className="item-thumb-video"
-                    data-src={item.hoverVideoUrl}
+                    data-src={item.directVideoUrl}
                     poster={thumbSrc(item) ?? undefined}
                     muted
                     loop

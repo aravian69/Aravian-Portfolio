@@ -23,8 +23,10 @@ export interface Project {
   /** Direct .mp4 of the final/after composite, paired with beforeVideoUrl. */
   afterVideoUrl?: string;
   thumbnail?: string;
-  /** Direct 720p MP4 (Bunny) played muted on grid-card hover. Derived from the thumbnail. */
-  hoverVideoUrl?: string;
+  /** Direct 720p MP4 (Bunny). Played muted on grid-card hover and natively in the
+   *  modal (much faster to start than the iframe player). Derived from the thumbnail
+   *  or the video URL. */
+  directVideoUrl?: string;
   /** Slideshow images. First image is used as the grid thumbnail unless `thumbnail` overrides it. */
   images?: string[];
   /** Optional quick-facts shown in the project modal, e.g. 'After Effects + Blender'. */
