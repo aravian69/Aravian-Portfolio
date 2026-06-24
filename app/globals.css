@@ -1065,6 +1065,21 @@ nav {
   pointer-events: none;
 }
 
+/* Real footage played on hover. Sits over the static thumbnail; caption and
+   badges (z-index 2) stay above it. Fades in once it starts playing. */
+.item-thumb-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.item-thumb-video.is-playing { opacity: 1; }
+
 /* Caption overlaid on the image, anchored to the bottom — always visible */
 .item-caption {
   position: absolute;

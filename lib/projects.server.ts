@@ -7,14 +7,16 @@ import type { Project, Category, Ratio } from '@/lib/projects';
 const reader = createReader(process.cwd(), keystaticConfig);
 
 /**
- * Bunny generates an animated preview.webp next to every video's thumbnail.jpg.
- * Derive it from the stored thumbnail so grid cards can play a motion preview on
- * hover with no extra CMS fields. Returns undefined for non-Bunny thumbnails.
+ * Bunny serves a direct 720p MP4 next to every video's thumbnail.jpg (MP4
+ * fallback). Derive it from the stored thumbnail so grid cards can play the real
+ * footage on hover with no extra CMS fields. 720p already exceeds the card's
+ * display size, so it looks sharp while staying light. Returns undefined for
+ * non-Bunny thumbnails (image-only projects keep their static thumbnail).
  */
-function bunnyPreview(thumbnail?: string | null): string | undefined {
+function bunnyHoverVideo(thumbnail?: string | null): string | undefined {
   if (!thumbnail) return undefined;
   return /\.b-cdn\.net\/[^/]+\/thumbnail\.jpg$/.test(thumbnail)
-    ? thumbnail.replace(/\/thumbnail\.jpg$/, '/preview.webp')
+    ? thumbnail.replace(/\/thumbnail\.jpg$/, '/play_720p.mp4')
     : undefined;
 }
 
@@ -37,7 +39,7 @@ export async function getAllProjects(): Promise<Project[]> {
       beforeVideoUrl: entry.beforeVideoUrl || undefined,
       afterVideoUrl: entry.afterVideoUrl || undefined,
       thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
-      previewUrl: bunnyPreview(entry.thumbnail),
+      hoverVideoUrl: bunnyHoverVideo(entry.thumbnail),
       images:
         entry.images && entry.images.length
           ? entry.images.filter((u): u is string => !!u).map((u) => clImg(u))
