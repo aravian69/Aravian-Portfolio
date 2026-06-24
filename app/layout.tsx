@@ -55,6 +55,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${syne.variable} ${figtree.variable} ${syneMono.variable}`}>
       <head suppressHydrationWarning>
+        {/* Warm the DNS + TLS handshake to Bunny's CDN (videos/thumbnails) and
+            Cloudinary (images) so the first hover/click request isn't cold. */}
+        <link rel="preconnect" href="https://vz-cbc45619-72d.b-cdn.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://vz-cbc45619-72d.b-cdn.net" />
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC }} />
       </head>
       <body>
