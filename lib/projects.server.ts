@@ -7,6 +7,18 @@ import type { Project, Category, Ratio } from '@/lib/projects';
 const reader = createReader(process.cwd(), keystaticConfig);
 
 /**
+ * Bunny generates an animated preview.webp next to every video's thumbnail.jpg.
+ * Derive it from the stored thumbnail so grid cards can play a motion preview on
+ * hover with no extra CMS fields. Returns undefined for non-Bunny thumbnails.
+ */
+function bunnyPreview(thumbnail?: string | null): string | undefined {
+  if (!thumbnail) return undefined;
+  return /\.b-cdn\.net\/[^/]+\/thumbnail\.jpg$/.test(thumbnail)
+    ? thumbnail.replace(/\/thumbnail\.jpg$/, '/preview.webp')
+    : undefined;
+}
+
+/**
  * Read every project from the Keystatic content store — including ones marked
  * hidden — and map each to the Project shape the UI expects. clImg() re-applies
  * the Cloudinary transform to stored raw image URLs (and passes non-Cloudinary
@@ -25,6 +37,7 @@ export async function getAllProjects(): Promise<Project[]> {
       beforeVideoUrl: entry.beforeVideoUrl || undefined,
       afterVideoUrl: entry.afterVideoUrl || undefined,
       thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
+      previewUrl: bunnyPreview(entry.thumbnail),
       images:
         entry.images && entry.images.length
           ? entry.images.filter((u): u is string => !!u).map((u) => clImg(u))
@@ -49,4 +62,33 @@ export async function getProjects(): Promise<Project[]> {
 export async function getShowreelUrl(): Promise<string | null> {
   const home = await reader.singletons.home.read();
   return home?.showreelUrl || null;
+}
+
+export interface ContactInfo {
+  email: string;
+  whatsapp: string;
+  instagram: string;
+  availabilityNote: string;
+  location: string;
+}
+
+const CONTACT_DEFAULTS: ContactInfo = {
+  email: 'azizaravian@gmail.com',
+  whatsapp: '',
+  instagram: 'aziizaravian',
+  availabilityNote: 'Available for projects, usually replies within a day',
+  location: 'Jakarta, Indonesia · GMT+7',
+};
+
+/** Read editable contact details from the Keystatic singleton (with fallbacks). */
+export async function getContact(): Promise<ContactInfo> {
+  const c = await reader.singletons.contact.read();
+  if (!c) return CONTACT_DEFAULTS;
+  return {
+    email: c.email || CONTACT_DEFAULTS.email,
+    whatsapp: c.whatsapp || '',
+    instagram: c.instagram || '',
+    availabilityNote: c.availabilityNote || CONTACT_DEFAULTS.availabilityNote,
+    location: c.location || CONTACT_DEFAULTS.location,
+  };
 }

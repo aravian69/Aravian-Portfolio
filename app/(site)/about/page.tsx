@@ -9,6 +9,22 @@ export default function AboutPage() {
         </div>
       </div>
 
+      {/* Top-right corner — selected clients */}
+      <div className="about-corner-tr">
+        <div className="about-meta-label">Selected clients</div>
+        <div className="about-meta-list">
+          Le Minerale · Ichitan · Charm · Teh Celup Sosro · Amway · Tugu Insurance · Makuku · Mowilex
+        </div>
+      </div>
+
+      {/* Bottom-left corner — toolkit */}
+      <div className="about-corner-bl">
+        <div className="about-meta-label">Toolkit</div>
+        <div className="about-meta-list">
+          After Effects · Blender · DaVinci Resolve · Photoshop
+        </div>
+      </div>
+
       {/* Centre — giant name */}
       <h2 className="about-big-name">
         <span className="outline">

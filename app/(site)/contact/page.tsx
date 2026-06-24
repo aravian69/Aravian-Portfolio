@@ -1,10 +1,15 @@
+import { getContact } from '@/lib/projects.server';
+
 function letters(text: string, key: string) {
   return text.split('').map((ch, i) => (
     <span key={`${key}-${i}`} className="letter">{ch}</span>
   ));
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const contact = await getContact();
+  const waDigits = contact.whatsapp.replace(/\D/g, '');
+
   return (
     <div className="page page-enter">
       <div className="contact-wrapper">
@@ -20,12 +25,42 @@ export default function ContactPage() {
           </p>
           <a
             className="contact-email"
-            href="https://mail.google.com/mail/?view=cm&to=azizaravian@gmail.com"
+            href={`https://mail.google.com/mail/?view=cm&to=${contact.email}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            azizaravian@gmail.com
+            {contact.email}
           </a>
+
+          <div className="contact-avail">
+            <span className="avail-dot" />
+            {contact.availabilityNote}
+          </div>
+
+          <div className="contact-channels">
+            {waDigits && (
+              <a
+                className="contact-channel"
+                href={`https://wa.me/${waDigits}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp <span className="social-arrow">↗</span>
+              </a>
+            )}
+            {contact.instagram && (
+              <a
+                className="contact-channel"
+                href={`https://instagram.com/${contact.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram <span className="social-arrow">↗</span>
+              </a>
+            )}
+          </div>
+
+          {contact.location && <div className="contact-loc">{contact.location}</div>}
         </div>
       </div>
     </div>

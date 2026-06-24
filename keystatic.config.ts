@@ -90,5 +90,37 @@ export default config({
         }),
       },
     }),
+
+    contact: singleton({
+      label: 'Contact page',
+      path: 'content/contact',
+      format: { data: 'yaml' },
+      schema: {
+        email: fields.text({
+          label: 'Email',
+          description: 'Shown as the big email link.',
+          defaultValue: 'azizaravian@gmail.com',
+        }),
+        whatsapp: fields.text({
+          label: 'WhatsApp number',
+          description: 'Country code + number, digits only (e.g. 6281234567890). Leave blank to hide the WhatsApp button.',
+          defaultValue: '',
+        }),
+        instagram: fields.text({
+          label: 'Instagram handle',
+          description: 'Without the @ (e.g. aziizaravian). Leave blank to hide the Instagram button.',
+          defaultValue: 'aziizaravian',
+        }),
+        availabilityNote: fields.text({
+          label: 'Availability note',
+          description: 'The line next to the green dot.',
+          defaultValue: 'Available for projects, usually replies within a day',
+        }),
+        location: fields.text({
+          label: 'Location / timezone',
+          defaultValue: 'Jakarta, Indonesia · GMT+7',
+        }),
+      },
+    }),
   },
 });

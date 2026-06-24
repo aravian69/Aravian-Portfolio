@@ -23,6 +23,8 @@ export interface Project {
   /** Direct .mp4 of the final/after composite, paired with beforeVideoUrl. */
   afterVideoUrl?: string;
   thumbnail?: string;
+  /** Animated Bunny preview (preview.webp) shown on grid-card hover. Derived from the thumbnail. */
+  previewUrl?: string;
   /** Slideshow images. First image is used as the grid thumbnail unless `thumbnail` overrides it. */
   images?: string[];
   /** Optional quick-facts shown in the project modal, e.g. 'After Effects + Blender'. */

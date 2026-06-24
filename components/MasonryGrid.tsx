@@ -170,6 +170,12 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selected, setSelected] = useState<Project | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useRef(false);
+
+  // Detect reduced-motion once so hover video-previews can be skipped for it.
+  useEffect(() => {
+    reduceMotion.current = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  }, []);
 
   // Scroll to top of grid area whenever the filter changes
   useEffect(() => {
@@ -371,6 +377,14 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(item); }
               }}
+              onMouseEnter={(e) => {
+                // Swap the static thumbnail for Bunny's animated preview so the
+                // card proves it's motion work. Loads lazily on first hover.
+                if (reduceMotion.current) return;
+                const thumb = e.currentTarget.querySelector<HTMLElement>('.item-thumb');
+                const preview = thumb?.dataset.preview;
+                if (thumb && preview) thumb.style.backgroundImage = `url(${preview})`;
+              }}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const dx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
@@ -380,12 +394,15 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = '';
+                const thumb = e.currentTarget.querySelector<HTMLElement>('.item-thumb');
+                if (thumb?.dataset.bg) thumb.style.backgroundImage = `url(${thumb.dataset.bg})`;
               }}
             >
               <div className="item-media">
                 <div
                   className={`item-thumb ${item.ratio}`}
                   data-bg={thumbSrc(item) ?? undefined}
+                  data-preview={item.previewUrl ?? undefined}
                   style={thumbSrc(item)
                     ? { backgroundSize: 'cover', backgroundPosition: 'center' }
                     : { background: 'var(--surface)' }}
@@ -396,6 +413,17 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
                   data-bg={thumbSrc(item) ?? undefined}
                   style={thumbSrc(item) ? undefined : { background: 'var(--surface)' }}
                 />
+                {item.beforeVideoUrl && item.afterVideoUrl && (
+                  <div className="item-ba-badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <polyline points="7 10 5 12 7 14" />
+                      <polyline points="17 10 19 12 17 14" />
+                    </svg>
+                    <span>Before / After</span>
+                  </div>
+                )}
                 {item.images && item.images.length > 1 && (
                   <div className="item-stack-badge" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
