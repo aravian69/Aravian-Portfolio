@@ -1,9 +1,12 @@
-title: "Latitude Communication"
+hidden: false
+title: Latitude Communication
 cat: 3d
 ratio: square
-desc: "3D Animation + Compositing"
-videoUrl: "https://player.mediadelivery.net/play/657161/5bddbd6e-fe26-4188-ba94-4dc258705562"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/5bddbd6e-fe26-4188-ba94-4dc258705562/thumbnail.jpg"
-images: []
+desc: 3D Animation + Compositing
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/5bddbd6e-fe26-4188-ba94-4dc258705562/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/5bddbd6e-fe26-4188-ba94-4dc258705562
 tools: ""
 year: null

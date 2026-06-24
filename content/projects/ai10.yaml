@@ -1,9 +1,12 @@
-title: "Dahlia Heritage Series"
+hidden: false
+title: Dahlia Heritage Series
 cat: ai
 ratio: landscape
-desc: "AI Video"
-videoUrl: "https://player.mediadelivery.net/play/657161/0a1ebe4e-9cc0-4a2c-97d5-2750e0a08595"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/0a1ebe4e-9cc0-4a2c-97d5-2750e0a08595/thumbnail.jpg"
-images: []
+desc: AI Video
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/0a1ebe4e-9cc0-4a2c-97d5-2750e0a08595/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/0a1ebe4e-9cc0-4a2c-97d5-2750e0a08595
 tools: ""
 year: null

@@ -33,28 +33,48 @@ function bunnyDirectVideo(thumbnail?: string | null, videoUrl?: string): string 
  * the Cloudinary transform to stored raw image URLs (and passes non-Cloudinary
  * URLs through unchanged). Used by /manage so hidden items stay editable.
  */
+/**
+ * Flatten the Keystatic `media` conditional (video | gallery | comparison) back
+ * into the flat fields the UI's Project shape uses, so the components don't need
+ * to know about the discriminated structure.
+ */
+function readMedia(media: Awaited<ReturnType<typeof reader.collections.projects.all>>[number]['entry']['media']) {
+  if (media.discriminant === 'video') {
+    return { videoUrl: media.value.videoUrl || undefined };
+  }
+  if (media.discriminant === 'comparison') {
+    return {
+      beforeVideoUrl: media.value.beforeVideoUrl || undefined,
+      afterVideoUrl: media.value.afterVideoUrl || undefined,
+    };
+  }
+  // gallery
+  const images = media.value.images.filter((u): u is string => !!u).map((u) => clImg(u));
+  return { images: images.length ? images : undefined };
+}
+
 export async function getAllProjects(): Promise<Project[]> {
   const entries = await reader.collections.projects.all();
   return entries
-    .map(({ slug, entry }): Project => ({
-      id: slug,
-      title: entry.title,
-      desc: entry.desc || undefined,
-      cat: entry.cat as Category,
-      ratio: entry.ratio as Ratio,
-      videoUrl: entry.videoUrl || undefined,
-      beforeVideoUrl: entry.beforeVideoUrl || undefined,
-      afterVideoUrl: entry.afterVideoUrl || undefined,
-      thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
-      directVideoUrl: bunnyDirectVideo(entry.thumbnail, entry.videoUrl || undefined),
-      images:
-        entry.images && entry.images.length
-          ? entry.images.filter((u): u is string => !!u).map((u) => clImg(u))
-          : undefined,
-      tools: entry.tools || undefined,
-      year: entry.year ?? undefined,
-      hidden: entry.hidden ?? false,
-    }))
+    .map(({ slug, entry }): Project => {
+      const m = readMedia(entry.media);
+      return {
+        id: slug,
+        title: entry.title,
+        desc: entry.desc || undefined,
+        cat: entry.cat as Category,
+        ratio: entry.ratio as Ratio,
+        videoUrl: m.videoUrl,
+        beforeVideoUrl: m.beforeVideoUrl,
+        afterVideoUrl: m.afterVideoUrl,
+        images: m.images,
+        thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
+        directVideoUrl: bunnyDirectVideo(entry.thumbnail, m.videoUrl),
+        tools: entry.tools || undefined,
+        year: entry.year ?? undefined,
+        hidden: entry.hidden ?? false,
+      };
+    })
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 

@@ -1,9 +1,12 @@
-title: "3D Render 03"
+hidden: false
+title: 3D Render 03
 cat: 3d
 ratio: landscape
-desc: "Blender + Photoshop"
-videoUrl: null
-thumbnail: "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394681/1-1_00000_rcujrh.png"
-images: []
+desc: Blender + Photoshop
+thumbnail: https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394681/1-1_00000_rcujrh.png
+media:
+  discriminant: gallery
+  value:
+    images: []
 tools: ""
 year: null

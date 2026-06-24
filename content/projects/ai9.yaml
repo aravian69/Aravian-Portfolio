@@ -1,9 +1,12 @@
-title: "Friendship"
+hidden: false
+title: Friendship
 cat: ai
 ratio: portrait
-desc: "AI Video 02"
-videoUrl: "https://player.mediadelivery.net/play/657161/d0eb4136-03ea-4034-b0b4-6e7e8ae1edd3"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/d0eb4136-03ea-4034-b0b4-6e7e8ae1edd3/thumbnail.jpg"
-images: []
+desc: AI Video 02
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/d0eb4136-03ea-4034-b0b4-6e7e8ae1edd3/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/d0eb4136-03ea-4034-b0b4-6e7e8ae1edd3
 tools: ""
 year: null

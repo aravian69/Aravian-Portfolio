@@ -1,9 +1,12 @@
-title: "Charm"
+hidden: false
+title: Charm
 cat: editing
 ratio: portrait
-desc: "Reels Video 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/d0e37c85-df76-4a01-b840-434d616a9555"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/d0e37c85-df76-4a01-b840-434d616a9555/thumbnail.jpg"
-images: []
+desc: Reels Video 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/d0e37c85-df76-4a01-b840-434d616a9555/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/d0e37c85-df76-4a01-b840-434d616a9555
 tools: ""
 year: null

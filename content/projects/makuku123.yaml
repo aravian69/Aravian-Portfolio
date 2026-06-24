@@ -1,11 +1,12 @@
+hidden: false
 title: Makuku
 cat: motion
 ratio: portrait
 desc: Motion Graphics
-videoUrl: >-
-  https://player.mediadelivery.net/play/657161/508ce19d-4b3f-43fa-ba60-902c152490bf
-thumbnail: >-
-  https://vz-cbc45619-72d.b-cdn.net/508ce19d-4b3f-43fa-ba60-902c152490bf/thumbnail.jpg
-images: []
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/508ce19d-4b3f-43fa-ba60-902c152490bf/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/508ce19d-4b3f-43fa-ba60-902c152490bf
 tools: After Effects
 year: 2026

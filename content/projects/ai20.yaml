@@ -1,9 +1,12 @@
-title: "Teh Celup Sosro"
+hidden: false
+title: Teh Celup Sosro
 cat: ai
 ratio: portrait
-desc: "AI Video + Motion Graphic 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/0b2b5544-9926-4767-a237-13863621a280"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/0b2b5544-9926-4767-a237-13863621a280/thumbnail.jpg"
-images: []
+desc: AI Video + Motion Graphic 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/0b2b5544-9926-4767-a237-13863621a280/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/0b2b5544-9926-4767-a237-13863621a280
 tools: ""
 year: null

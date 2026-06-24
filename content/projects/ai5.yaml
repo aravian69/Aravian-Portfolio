@@ -1,9 +1,12 @@
-title: "Amway Spring"
+hidden: false
+title: Amway Spring
 cat: ai
 ratio: portrait
-desc: "AI Video 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/a19fa35b-66eb-42a0-bfe3-824a23742aaf"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/a19fa35b-66eb-42a0-bfe3-824a23742aaf/thumbnail.jpg"
-images: []
+desc: AI Video 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/a19fa35b-66eb-42a0-bfe3-824a23742aaf/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/a19fa35b-66eb-42a0-bfe3-824a23742aaf
 tools: ""
 year: null

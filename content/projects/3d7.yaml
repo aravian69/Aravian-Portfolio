@@ -1,15 +1,18 @@
-title: "Series"
+hidden: false
+title: Series
 cat: 3d
 ratio: portrait
-desc: "Blender + Photoshop · 6 frames"
-videoUrl: null
-thumbnail: null
-images:
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_1_xvgdjz.png"
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_2_ca7v3b.png"
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_3_onl5fn.png"
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394678/1_4_cpitws.png"
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_5_pg9x25.png"
-  - "https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_6_ckjnsq.png"
+desc: Blender + Photoshop · 6 frames
+thumbnail: ""
+media:
+  discriminant: gallery
+  value:
+    images:
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_1_xvgdjz.png
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_2_ca7v3b.png
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394677/1_3_onl5fn.png
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394678/1_4_cpitws.png
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_5_pg9x25.png
+      - https://res.cloudinary.com/dnnkz3rzd/image/upload/v1778394679/1_6_ckjnsq.png
 tools: ""
 year: null

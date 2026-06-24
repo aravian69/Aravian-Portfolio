@@ -1,9 +1,12 @@
-title: "Teh Celup Sosro"
+hidden: false
+title: Teh Celup Sosro
 cat: motion
 ratio: portrait
-desc: "Motion Graphics 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/63264d21-d215-40d7-af8a-ae95871d7b8f"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/63264d21-d215-40d7-af8a-ae95871d7b8f/thumbnail.jpg"
-images: []
+desc: Motion Graphics 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/63264d21-d215-40d7-af8a-ae95871d7b8f/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/63264d21-d215-40d7-af8a-ae95871d7b8f
 tools: ""
 year: null

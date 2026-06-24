@@ -1,9 +1,12 @@
-title: "MAKUKU"
+hidden: false
+title: MAKUKU
 cat: ai
 ratio: landscape
-desc: "AI Animation Video"
-videoUrl: "https://player.mediadelivery.net/play/657161/19e9587a-e6fd-479a-ad17-109add641840"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/19e9587a-e6fd-479a-ad17-109add641840/thumbnail.jpg"
-images: []
+desc: AI Animation Video
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/19e9587a-e6fd-479a-ad17-109add641840/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/19e9587a-e6fd-479a-ad17-109add641840
 tools: ""
 year: null

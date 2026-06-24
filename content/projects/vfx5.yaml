@@ -1,9 +1,12 @@
-title: "MOWILEX"
+hidden: false
+title: MOWILEX
 cat: vfx
 ratio: landscape
-desc: "Video Cleaning + Shadow Fix + BG Replace"
-videoUrl: "https://player.mediadelivery.net/play/657161/85dee85e-8d4e-4044-8040-6c3ed796c1ff"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/85dee85e-8d4e-4044-8040-6c3ed796c1ff/thumbnail_2615f63b.jpg"
-images: []
+desc: Video Cleaning + Shadow Fix + BG Replace
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/85dee85e-8d4e-4044-8040-6c3ed796c1ff/thumbnail_2615f63b.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/85dee85e-8d4e-4044-8040-6c3ed796c1ff
 tools: ""
 year: null

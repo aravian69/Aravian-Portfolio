@@ -1,9 +1,12 @@
-title: "Enfagrow"
+hidden: false
+title: Enfagrow
 cat: ai
 ratio: landscape
-desc: "AI Video + Motion Graphic"
-videoUrl: "https://player.mediadelivery.net/play/657161/def7933c-00c0-4c21-b29c-ff47db84ce2b"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/def7933c-00c0-4c21-b29c-ff47db84ce2b/thumbnail.jpg"
-images: []
+desc: AI Video + Motion Graphic
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/def7933c-00c0-4c21-b29c-ff47db84ce2b/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/def7933c-00c0-4c21-b29c-ff47db84ce2b
 tools: ""
 year: null

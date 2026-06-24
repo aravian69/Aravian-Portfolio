@@ -1,14 +1,13 @@
+hidden: false
 title: Makuku
 cat: ai
 ratio: landscape
 desc: AI Compositing & Grading with DaVinci Resolve
-videoUrl: ''
-beforeVideoUrl: >-
-  https://vz-cbc45619-72d.b-cdn.net/6801ec26-48e2-4e36-b9d7-41c8c7146836/play_720p.mp4
-afterVideoUrl: >-
-  https://vz-cbc45619-72d.b-cdn.net/aea67185-97aa-41fc-999c-bb7a7407b82f/play_720p.mp4
-thumbnail: >-
-  https://vz-cbc45619-72d.b-cdn.net/aea67185-97aa-41fc-999c-bb7a7407b82f/thumbnail.jpg
-images: []
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/aea67185-97aa-41fc-999c-bb7a7407b82f/thumbnail.jpg
+media:
+  discriminant: comparison
+  value:
+    beforeVideoUrl: https://vz-cbc45619-72d.b-cdn.net/6801ec26-48e2-4e36-b9d7-41c8c7146836/play_720p.mp4
+    afterVideoUrl: https://vz-cbc45619-72d.b-cdn.net/aea67185-97aa-41fc-999c-bb7a7407b82f/play_720p.mp4
 tools: DaVinci Resolve
 year: 2026

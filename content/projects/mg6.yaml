@@ -1,9 +1,12 @@
-title: "Chocodrink"
+hidden: false
+title: Chocodrink
 cat: motion
 ratio: portrait
-desc: "Motion Graphics 04"
-videoUrl: "https://player.mediadelivery.net/play/657161/b0b0c7e5-1078-4da9-8d8c-eac0c14b6b9d"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/b0b0c7e5-1078-4da9-8d8c-eac0c14b6b9d/thumbnail.jpg"
-images: []
+desc: Motion Graphics 04
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/b0b0c7e5-1078-4da9-8d8c-eac0c14b6b9d/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/b0b0c7e5-1078-4da9-8d8c-eac0c14b6b9d
 tools: ""
 year: null

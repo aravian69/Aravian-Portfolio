@@ -1,9 +1,12 @@
-title: "Tasseo"
+hidden: false
+title: Tasseo
 cat: ai
 ratio: portrait
-desc: "AI Video 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/301d9028-54c8-448b-aafd-71676775905b"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/301d9028-54c8-448b-aafd-71676775905b/thumbnail.jpg"
-images: []
+desc: AI Video 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/301d9028-54c8-448b-aafd-71676775905b/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/301d9028-54c8-448b-aafd-71676775905b
 tools: ""
 year: null

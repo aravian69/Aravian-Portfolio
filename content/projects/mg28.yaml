@@ -1,9 +1,12 @@
-title: "Charm"
+hidden: false
+title: Charm
 cat: motion
 ratio: portrait
-desc: "Motion Graphics 08"
-videoUrl: "https://player.mediadelivery.net/play/657161/d7e867d7-1407-42b8-9110-2aabf4300ed3"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/d7e867d7-1407-42b8-9110-2aabf4300ed3/thumbnail.jpg"
-images: []
+desc: Motion Graphics 08
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/d7e867d7-1407-42b8-9110-2aabf4300ed3/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/d7e867d7-1407-42b8-9110-2aabf4300ed3
 tools: ""
 year: null

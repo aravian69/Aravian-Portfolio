@@ -1,9 +1,12 @@
-title: "MAKUKU"
+hidden: false
+title: MAKUKU
 cat: ai
 ratio: landscape
-desc: "AI Video Stillo"
-videoUrl: "https://player.mediadelivery.net/play/657161/dd49b8ed-4e70-4a77-af4e-049b5adf0908"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/dd49b8ed-4e70-4a77-af4e-049b5adf0908/thumbnail.jpg"
-images: []
+desc: AI Video Stillo
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/dd49b8ed-4e70-4a77-af4e-049b5adf0908/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/dd49b8ed-4e70-4a77-af4e-049b5adf0908
 tools: ""
 year: null

@@ -1,9 +1,12 @@
-title: "ICHITAN"
+hidden: false
+title: ICHITAN
 cat: motion
 ratio: portrait
-desc: "Motion Graphics 01"
-videoUrl: "https://player.mediadelivery.net/play/657161/291fe949-b274-42d9-a499-c368b663d354"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/291fe949-b274-42d9-a499-c368b663d354/thumbnail.jpg"
-images: []
+desc: Motion Graphics 01
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/291fe949-b274-42d9-a499-c368b663d354/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/291fe949-b274-42d9-a499-c368b663d354
 tools: ""
 year: null

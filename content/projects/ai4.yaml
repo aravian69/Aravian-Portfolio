@@ -1,9 +1,12 @@
-title: "ASIX"
+hidden: false
+title: ASIX
 cat: ai
 ratio: landscape
-desc: "AI Video + VFX + Motion Graphic"
-videoUrl: "https://player.mediadelivery.net/play/657161/61e82430-8faf-4cb7-b51a-b9a7a4d5fe43"
-thumbnail: "https://vz-cbc45619-72d.b-cdn.net/61e82430-8faf-4cb7-b51a-b9a7a4d5fe43/thumbnail.jpg"
-images: []
+desc: AI Video + VFX + Motion Graphic
+thumbnail: https://vz-cbc45619-72d.b-cdn.net/61e82430-8faf-4cb7-b51a-b9a7a4d5fe43/thumbnail.jpg
+media:
+  discriminant: video
+  value:
+    videoUrl: https://player.mediadelivery.net/play/657161/61e82430-8faf-4cb7-b51a-b9a7a4d5fe43
 tools: ""
 year: null

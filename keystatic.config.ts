@@ -57,19 +57,46 @@ export default config({
           defaultValue: 'portrait',
         }),
         desc: fields.text({ label: 'Short description', description: 'e.g. "Motion Graphics 07"' }),
-        videoUrl: fields.url({ label: 'Video URL', description: 'Bunny player link (leave blank for image-only projects)' }),
-        beforeVideoUrl: fields.url({
-          label: 'Before video (.mp4) — comparison slider',
-          description: 'Optional. Raw / green-screen plate as a DIRECT .mp4 link (Bunny → enable "MP4 Fallback"). Fill BOTH this and the After field below to show a drag-to-compare before/after slider instead of the normal player.',
+        thumbnail: fields.url({
+          label: 'Thumbnail image URL',
+          description: 'The image shown on the Work grid card. For Bunny videos this is usually the .../thumbnail.jpg link.',
         }),
-        afterVideoUrl: fields.url({
-          label: 'After video (.mp4) — comparison slider',
-          description: 'Optional. Final composite as a DIRECT .mp4 link, same length / size / fps as the Before video.',
-        }),
-        thumbnail: fields.url({ label: 'Thumbnail image URL' }),
-        images: fields.array(
-          fields.url({ label: 'Image URL' }),
-          { label: 'Slideshow images', description: 'For image projects with multiple frames', itemLabel: (p) => p.value || 'Image' }
+        // Pick the content type, then only the fields for that type appear.
+        media: fields.conditional(
+          fields.select({
+            label: 'Content type',
+            description: 'What this project shows when opened. Pick one and fill the fields that appear.',
+            options: [
+              { label: 'Normal video', value: 'video' },
+              { label: 'Image gallery', value: 'gallery' },
+              { label: 'Before / After comparison', value: 'comparison' },
+            ],
+            defaultValue: 'video',
+          }),
+          {
+            video: fields.object({
+              videoUrl: fields.url({
+                label: 'Video URL',
+                description: 'Bunny player link (or any embed). Plays in the modal.',
+              }),
+            }),
+            gallery: fields.object({
+              images: fields.array(
+                fields.url({ label: 'Image URL' }),
+                { label: 'Images', description: 'One or more frames. A single image is fine (the thumbnail also works on its own).', itemLabel: (p) => p.value || 'Image' }
+              ),
+            }),
+            comparison: fields.object({
+              beforeVideoUrl: fields.url({
+                label: 'Before video (.mp4)',
+                description: 'Raw / green-screen plate as a DIRECT .mp4 link (Bunny → enable "MP4 Fallback").',
+              }),
+              afterVideoUrl: fields.url({
+                label: 'After video (.mp4)',
+                description: 'Final composite as a DIRECT .mp4 link, same length / size / fps as the Before video.',
+              }),
+            }),
+          }
         ),
         tools: fields.text({ label: 'Tools used', description: 'Optional, e.g. "After Effects + Blender"' }),
         year: fields.integer({ label: 'Year', description: 'Optional' }),
