@@ -20,6 +20,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import sharp from 'sharp';
+import YAML from 'yaml';
 
 const __dir       = path.dirname(fileURLToPath(import.meta.url));
 const contentDir  = path.join(__dir, '..', 'content', 'projects');
@@ -61,17 +62,21 @@ function clImg(url, transforms = 'w_1200,q_auto,f_auto') {
 }
 
 // ── Read id + thumbnail URL from the Keystatic YAML content files ──────────
+// Parses YAML properly (values may be quoted or not, and gallery images live
+// under the `media` conditional) rather than regex-matching specific formatting.
 function parseProjects() {
   const out = [];
   if (!fs.existsSync(contentDir)) return out;
   for (const file of fs.readdirSync(contentDir)) {
     if (!file.endsWith('.yaml')) continue;
     const id = file.replace(/\.yaml$/, '');
-    const text = fs.readFileSync(path.join(contentDir, file), 'utf8');
-    // Prefer an explicit thumbnail, else the first image in the images: list.
-    let m = text.match(/^thumbnail:\s*"([^"]+)"/m);
-    if (!m) m = text.match(/^images:\s*\n\s*-\s*"([^"]+)"/m);
-    out.push({ id, url: m ? clImg(m[1]) : null });
+    const data = YAML.parse(fs.readFileSync(path.join(contentDir, file), 'utf8')) || {};
+    // Prefer an explicit thumbnail, else the first gallery image.
+    let url = data.thumbnail || null;
+    if (!url && data.media?.discriminant === 'gallery') {
+      url = (data.media.value?.images || []).find(Boolean) || null;
+    }
+    out.push({ id, url: url ? clImg(url) : null });
   }
   return out;
 }
