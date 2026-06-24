@@ -91,6 +91,36 @@ export default config({
       },
     }),
 
+    about: singleton({
+      label: 'About page',
+      path: 'content/about',
+      format: { data: 'yaml' },
+      schema: {
+        portraitUrl: fields.url({
+          label: 'Portrait image URL',
+          description: 'Optional. A vertical photo works best. It appears faded into the right side of the page, behind your name.',
+        }),
+        skills: fields.text({
+          label: 'Skills line (top-left)',
+          defaultValue: 'VFX · Color Grading · Motion Graphics · AI Video · Graphic Design',
+        }),
+        clients: fields.text({
+          label: 'Selected clients (top-right)',
+          defaultValue: 'Le Minerale · Ichitan · Charm · Teh Celup Sosro · Amway · Tugu Insurance · Makuku · Mowilex',
+        }),
+        toolkit: fields.text({
+          label: 'Toolkit (bottom-left)',
+          defaultValue: 'After Effects · Blender · DaVinci Resolve · Photoshop',
+        }),
+        bio: fields.text({
+          label: 'Bio paragraph (bottom-right)',
+          multiline: true,
+          defaultValue:
+            'I craft visual stories that blur the line between reality and imagination. Every frame I touch is treated as art. Based in Jakarta, available for projects worldwide.',
+        }),
+      },
+    }),
+
     contact: singleton({
       label: 'Contact page',
       path: 'content/contact',

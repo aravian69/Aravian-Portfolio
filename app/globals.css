@@ -1272,6 +1272,32 @@ nav {
   color: var(--muted);
 }
 
+/* Portrait dissolves into the dark from the right edge so the centred name and
+   corner text stay readable. Sits behind everything except the background. */
+.about-portrait {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 620px);
+  z-index: 0;
+  background-size: cover;
+  background-position: center top;
+  opacity: 0.5;
+  filter: grayscale(0.25) contrast(1.02);
+  -webkit-mask-image: linear-gradient(to left, #000 18%, transparent 100%),
+                      linear-gradient(to top, transparent 0%, #000 30%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to left, #000 18%, transparent 100%),
+              linear-gradient(to top, transparent 0%, #000 30%);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+[data-theme="light"] .about-portrait { opacity: 0.38; }
+@media (max-width: 640px) {
+  .about-portrait { width: 100%; opacity: 0.22; }
+}
+
 .about-eyebrow {
   font-family: var(--font-pixel);
   font-size: var(--tx-xs);

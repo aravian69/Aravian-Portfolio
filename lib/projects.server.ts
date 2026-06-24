@@ -64,6 +64,35 @@ export async function getShowreelUrl(): Promise<string | null> {
   return home?.showreelUrl || null;
 }
 
+export interface AboutInfo {
+  portraitUrl: string | null;
+  skills: string;
+  clients: string;
+  toolkit: string;
+  bio: string;
+}
+
+const ABOUT_DEFAULTS: AboutInfo = {
+  portraitUrl: null,
+  skills: 'VFX · Color Grading · Motion Graphics · AI Video · Graphic Design',
+  clients: 'Le Minerale · Ichitan · Charm · Teh Celup Sosro · Amway · Tugu Insurance · Makuku · Mowilex',
+  toolkit: 'After Effects · Blender · DaVinci Resolve · Photoshop',
+  bio: 'I craft visual stories that blur the line between reality and imagination. Every frame I touch is treated as art. Based in Jakarta, available for projects worldwide.',
+};
+
+/** Read editable About-page content from the Keystatic singleton (with fallbacks). */
+export async function getAbout(): Promise<AboutInfo> {
+  const a = await reader.singletons.about.read();
+  if (!a) return ABOUT_DEFAULTS;
+  return {
+    portraitUrl: a.portraitUrl || null,
+    skills: a.skills || ABOUT_DEFAULTS.skills,
+    clients: a.clients || ABOUT_DEFAULTS.clients,
+    toolkit: a.toolkit || ABOUT_DEFAULTS.toolkit,
+    bio: a.bio || ABOUT_DEFAULTS.bio,
+  };
+}
+
 export interface ContactInfo {
   email: string;
   whatsapp: string;
