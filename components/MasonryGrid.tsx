@@ -163,7 +163,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 }
 
 // ── Layout constants ──────────────────────────────────────────────────────
-const CARD_STAGGER_MS    = 55;   // animation delay per card
+const CARD_STAGGER_MS    = 35;   // animation delay per card
+// Cap the stagger so the entrance finishes in <1s instead of dragging across all
+// ~95 cards (which kept the compositor busy for 5s and made the cursor lag on
+// open). Cards past the cap share the max delay — they're off-screen anyway.
+const CARD_STAGGER_CAP   = 14;
 const TILT_PERSPECTIVE   = 700;  // px
 const TILT_MULTIPLIER    = 3.5;  // deg
 const TILT_SCALE         = 1.015;
@@ -380,7 +384,7 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
             <div
               key={`${activeFilter}-${item.id}`}
               className={`masonry-item${item.ratio !== 'portrait' ? ' masonry-item-landscape' : ''}`}
-              style={{ animationDelay: `${idx * CARD_STAGGER_MS}ms` }}
+              style={{ animationDelay: `${Math.min(idx, CARD_STAGGER_CAP) * CARD_STAGGER_MS}ms` }}
               role="button"
               tabIndex={0}
               aria-label={`Open ${item.title}${item.desc ? ` — ${item.desc}` : ''} (${item.cat})`}
