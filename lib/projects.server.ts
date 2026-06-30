@@ -53,6 +53,12 @@ function readMedia(media: Awaited<ReturnType<typeof reader.collections.projects.
   return { images: images.length ? images : undefined };
 }
 
+/** Normalise a Keystatic image-field value (bare filename or full path) to a usable src. */
+function thumbUploadSrc(v?: string | null): string | undefined {
+  if (!v) return undefined;
+  return v.startsWith('/') ? v : `/uploads/thumbnails/${v}`;
+}
+
 export async function getAllProjects(): Promise<Project[]> {
   const entries = await reader.collections.projects.all();
   return entries
@@ -68,8 +74,10 @@ export async function getAllProjects(): Promise<Project[]> {
         beforeVideoUrl: m.beforeVideoUrl,
         afterVideoUrl: m.afterVideoUrl,
         images: m.images,
-        // Uploaded image wins; otherwise fall back to the pasted URL.
-        thumbnail: entry.thumbnailUpload || (entry.thumbnail ? clImg(entry.thumbnail) : undefined),
+        // Uploaded image wins; otherwise fall back to the pasted URL. Keystatic
+        // may return the upload as a bare filename or a full public path, so
+        // normalise both to a usable /uploads/thumbnails/* src.
+        thumbnail: thumbUploadSrc(entry.thumbnailUpload) || (entry.thumbnail ? clImg(entry.thumbnail) : undefined),
         // Hover preview is derived from the Bunny URL / video, not the upload.
         directVideoUrl: bunnyDirectVideo(entry.thumbnail, m.videoUrl),
         tools: entry.tools || undefined,

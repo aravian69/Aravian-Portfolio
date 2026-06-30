@@ -1,0 +1,110 @@
+/* /pick uses the root layout (no globals.css), so reset the default body frame. */
+:global(html),
+:global(body) {
+  margin: 0;
+  background: #0d0d10;
+}
+
+.shell {
+  min-height: 100vh;
+  background: #0d0d10;
+  color: #e9e9ec;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  padding: 28px clamp(16px, 4vw, 48px) 80px;
+}
+
+.bar { display: flex; align-items: baseline; gap: 14px; }
+.title { font-size: 1.4rem; font-weight: 700; }
+.count { font-size: 0.8rem; color: #8a8a93; }
+.sub { font-size: 0.82rem; color: #8a8a93; margin: 4px 0 24px; }
+
+.authRow { display: flex; gap: 10px; margin-top: 16px; max-width: 360px; }
+.input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #2a2a31;
+  background: #18181d;
+  color: #e9e9ec;
+  font-size: 0.9rem;
+}
+
+.btnPrimary {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid #c8ff00;
+  background: #c8ff00;
+  color: #0d0d10;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btnPrimary:disabled { opacity: 0.55; cursor: default; }
+.btnGhost {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2a31;
+  background: #18181d;
+  color: #e9e9ec;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.stage {
+  border: 1px solid #232329;
+  border-radius: 14px;
+  background: #141418;
+  padding: 16px;
+  margin-bottom: 28px;
+}
+.stageHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.video {
+  width: 100%;
+  max-height: 60vh;
+  background: #000;
+  border-radius: 8px;
+  display: block;
+  object-fit: contain;
+}
+.scrub { width: 100%; margin: 14px 0 8px; accent-color: #c8ff00; cursor: ew-resize; }
+.scrubMeta { display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; color: #8a8a93; }
+
+.msgOk { margin-top: 12px; font-size: 0.82rem; color: #9be15d; }
+.msgError { margin-top: 12px; font-size: 0.82rem; color: #ff8a8a; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  border: 1px solid #232329;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #141418;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.card:hover { border-color: #3a3a45; transform: translateY(-2px); }
+.cardActive { border-color: #c8ff00; }
+.thumb {
+  aspect-ratio: 16 / 9;
+  background: #1c1c22 center / cover no-repeat;
+}
+.cardTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0 10px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
