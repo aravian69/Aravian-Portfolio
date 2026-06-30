@@ -57,9 +57,15 @@ export default config({
           defaultValue: 'portrait',
         }),
         desc: fields.text({ label: 'Short description', description: 'e.g. "Motion Graphics 07"' }),
+        thumbnailUpload: fields.image({
+          label: 'Thumbnail — upload',
+          description: 'Upload a thumbnail image directly here. If set, it is used instead of the URL below. Best way to set a custom grid image without touching Bunny.',
+          directory: 'public/uploads/thumbnails',
+          publicPath: '/uploads/thumbnails',
+        }),
         thumbnail: fields.url({
-          label: 'Thumbnail image URL',
-          description: 'The image shown on the Work grid card. For Bunny videos this is usually the .../thumbnail.jpg link.',
+          label: 'Thumbnail — URL (alternative)',
+          description: 'Or paste an image URL (e.g. a Bunny .../thumbnail.jpg). Used only when no image is uploaded above. Bunny URLs here also power the hover preview.',
         }),
         // Pick the content type, then only the fields for that type appear.
         media: fields.conditional(

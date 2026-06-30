@@ -24,6 +24,7 @@ import YAML from 'yaml';
 
 const __dir       = path.dirname(fileURLToPath(import.meta.url));
 const contentDir  = path.join(__dir, '..', 'content', 'projects');
+const publicDir   = path.join(__dir, '..', 'public');
 const outPath     = path.join(__dir, '..', 'lib', 'hueOrder.ts');
 
 // ── Constants (keep in sync with MasonryGrid.tsx) ──────────────────────────
@@ -71,8 +72,8 @@ function parseProjects() {
     if (!file.endsWith('.yaml')) continue;
     const id = file.replace(/\.yaml$/, '');
     const data = YAML.parse(fs.readFileSync(path.join(contentDir, file), 'utf8')) || {};
-    // Prefer an explicit thumbnail, else the first gallery image.
-    let url = data.thumbnail || null;
+    // Prefer an uploaded image, then a thumbnail URL, then the first gallery image.
+    let url = data.thumbnailUpload || data.thumbnail || null;
     if (!url && data.media?.discriminant === 'gallery') {
       url = (data.media.value?.images || []).find(Boolean) || null;
     }
@@ -89,10 +90,24 @@ const FETCH_HEADERS = {
   'Accept': 'image/avif,image/webp,image/png,image/*,*/*;q=0.8',
 };
 
+// Fetch remote URLs; read uploaded thumbnails (local public-path or bare
+// filename from Keystatic's image field) straight off disk.
+async function getBuffer(url) {
+  if (/^https?:\/\//.test(url)) {
+    const res = await fetch(url, { headers: FETCH_HEADERS });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return Buffer.from(await res.arrayBuffer());
+  }
+  const candidates = [
+    path.join(publicDir, url.replace(/^\//, '')),
+    path.join(publicDir, 'uploads', 'thumbnails', path.basename(url)),
+  ];
+  for (const p of candidates) if (fs.existsSync(p)) return fs.readFileSync(p);
+  throw new Error(`local file not found: ${url}`);
+}
+
 async function sampleUrl(url) {
-  const res = await fetch(url, { headers: FETCH_HEADERS });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const buf = Buffer.from(await res.arrayBuffer());
+  const buf = await getBuffer(url);
   const { data } = await sharp(buf)
     .resize(SWATCH_SIZE, SWATCH_SIZE, { fit: 'fill' })
     .removeAlpha()

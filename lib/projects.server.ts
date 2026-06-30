@@ -68,7 +68,9 @@ export async function getAllProjects(): Promise<Project[]> {
         beforeVideoUrl: m.beforeVideoUrl,
         afterVideoUrl: m.afterVideoUrl,
         images: m.images,
-        thumbnail: entry.thumbnail ? clImg(entry.thumbnail) : undefined,
+        // Uploaded image wins; otherwise fall back to the pasted URL.
+        thumbnail: entry.thumbnailUpload || (entry.thumbnail ? clImg(entry.thumbnail) : undefined),
+        // Hover preview is derived from the Bunny URL / video, not the upload.
         directVideoUrl: bunnyDirectVideo(entry.thumbnail, m.videoUrl),
         tools: entry.tools || undefined,
         year: entry.year ?? undefined,
