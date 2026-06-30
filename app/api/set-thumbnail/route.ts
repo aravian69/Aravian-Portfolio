@@ -15,8 +15,8 @@ const BRANCH = 'main';
 const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
 
 function gh(token: string) {
-  return (path: string, init?: RequestInit) =>
-    fetch(`${API}${path}`, {
+  return async (path: string, step: string, init?: RequestInit) => {
+    const res = await fetch(`${API}${path}`, {
       ...init,
       headers: {
         Authorization: `Bearer ${token}`,
@@ -25,6 +25,12 @@ function gh(token: string) {
         ...(init?.headers || {}),
       },
     });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(`[${step}] ${res.status} ${json?.message || ''}`.trim());
+    }
+    return json;
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -54,15 +60,19 @@ export async function POST(req: NextRequest) {
 
   try {
     // 1. Current branch tip + base tree
-    const refRes = await api(`/git/ref/heads/${BRANCH}`);
-    if (!refRes.ok) throw new Error(`ref ${refRes.status}`);
-    const latestSha = (await refRes.json()).object.sha;
-    const baseTree = (await (await api(`/git/commits/${latestSha}`)).json()).tree.sha;
+    const ref = await api(`/git/ref/heads/${BRANCH}`, 'get-ref');
+    const latestSha = ref.object.sha;
+    const baseCommit = await api(`/git/commits/${latestSha}`, 'get-commit');
+    const baseTree = baseCommit.tree.sha;
 
     // 2. Current project YAML (must exist)
-    const fileRes = await api(`/contents/${yamlPath}?ref=${BRANCH}`);
-    if (!fileRes.ok) return NextResponse.json({ error: `Unknown project: ${projectId}` }, { status: 404 });
-    let yaml = Buffer.from((await fileRes.json()).content, 'base64').toString('utf8');
+    let file;
+    try {
+      file = await api(`/contents/${yamlPath}?ref=${BRANCH}`, 'get-yaml');
+    } catch {
+      return NextResponse.json({ error: `Unknown project: ${projectId}` }, { status: 404 });
+    }
+    let yaml = Buffer.from(file.content, 'base64').toString('utf8');
     // Point thumbnailUpload at the new image (replace if present, else insert before thumbnail:).
     if (/^thumbnailUpload:.*$/m.test(yaml)) {
       yaml = yaml.replace(/^thumbnailUpload:.*$/m, `thumbnailUpload: ${filename}`);
@@ -73,29 +83,28 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Blobs (image + yaml), tree, commit, move the branch
-    const imageBlob = (await (await api('/git/blobs', { method: 'POST', body: JSON.stringify({ content: b64, encoding: 'base64' }) })).json()).sha;
-    const yamlBlob = (await (await api('/git/blobs', { method: 'POST', body: JSON.stringify({ content: yaml, encoding: 'utf-8' }) })).json()).sha;
+    const imageBlob = await api('/git/blobs', 'image-blob', { method: 'POST', body: JSON.stringify({ content: b64, encoding: 'base64' }) });
+    const yamlBlob = await api('/git/blobs', 'yaml-blob', { method: 'POST', body: JSON.stringify({ content: yaml, encoding: 'utf-8' }) });
 
-    const tree = (await (await api('/git/trees', {
+    const tree = await api('/git/trees', 'create-tree', {
       method: 'POST',
       body: JSON.stringify({
         base_tree: baseTree,
         tree: [
-          { path: imagePath, mode: '100644', type: 'blob', sha: imageBlob },
-          { path: yamlPath, mode: '100644', type: 'blob', sha: yamlBlob },
+          { path: imagePath, mode: '100644', type: 'blob', sha: imageBlob.sha },
+          { path: yamlPath, mode: '100644', type: 'blob', sha: yamlBlob.sha },
         ],
       }),
-    })).json()).sha;
+    });
 
-    const commit = (await (await api('/git/commits', {
+    const commit = await api('/git/commits', 'create-commit', {
       method: 'POST',
-      body: JSON.stringify({ message: `Set ${projectId} thumbnail from frame picker`, tree, parents: [latestSha] }),
-    })).json()).sha;
+      body: JSON.stringify({ message: `Set ${projectId} thumbnail from frame picker`, tree: tree.sha, parents: [latestSha] }),
+    });
 
-    const move = await api(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit }) });
-    if (!move.ok) throw new Error(`ref update ${move.status}`);
+    await api(`/git/refs/heads/${BRANCH}`, 'update-ref', { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
 
-    return NextResponse.json({ ok: true, commit });
+    return NextResponse.json({ ok: true, commit: commit.sha });
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'commit failed' }, { status: 502 });
   }
