@@ -14,6 +14,9 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
+    // The single-screen no-scroll layout is a desktop conceit. On phones the
+    // stacked content is taller than the viewport, so let it scroll normally.
+    if (!window.matchMedia('(min-width: 769px)').matches) return;
     document.documentElement.style.overflow = 'hidden';
     return () => { document.documentElement.style.overflow = ''; };
   }, []);

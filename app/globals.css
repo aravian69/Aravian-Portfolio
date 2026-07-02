@@ -1530,21 +1530,21 @@ nav {
 [data-theme="light"] .contact-footer { border-top-color: rgba(0, 0, 0, 0.08); }
 
 /* ── HOME: no scroll ── */
-html[data-page="home"],
-html[data-page="home"] body {
-  overflow: hidden !important;
-}
-
-/* ── HOME: pin footer ── */
-/* Home is a no-scroll viewport page, so its footer must be pinned to stay
-   visible. Every other page (work, about, contact) uses a normal footer that
-   sits at the end of the content instead of floating over it. */
-[data-page="home"] .site-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+/* Desktop only: home is a single no-scroll viewport with a pinned footer. On
+   mobile the stacked content is taller than the screen, so it scrolls normally
+   and the footer sits at the end (see the mobile override below). */
+@media (min-width: 769px) {
+  html[data-page="home"],
+  html[data-page="home"] body {
+    overflow: hidden !important;
+  }
+  [data-page="home"] .site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
 }
 
 /* ── SITE FOOTER ── */
@@ -1589,8 +1589,11 @@ html[data-page="home"] body {
     padding: 0.65rem var(--sp-md);
     font-size: 0.62rem;
   }
-  /* Give home-left enough bottom breathing room so avail clears the fixed footer */
-  .home-left { padding-bottom: 80px; }
+  /* Home scrolls on mobile: content flows from the top, footer sits at the end
+     of it (not pinned), so nothing overlaps. */
+  [data-page="home"] .site-footer { position: static; }
+  .home-page { min-height: auto; }
+  .home-left { justify-content: flex-start; padding-bottom: var(--sp-xl); }
 }
 
 /* ── MODAL ROOT ── */
