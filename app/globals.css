@@ -1455,8 +1455,15 @@ nav {
   font-family: var(--font-mono);
   font-size: var(--tx-xs);
   letter-spacing: 0.08em;
+  line-height: 1.6;
   text-transform: uppercase;
   color: var(--muted);
+}
+/* On phones the note wraps to two lines: top-align the dot and add air. */
+@media (max-width: 640px) {
+  .contact-avail { align-items: flex-start; }
+  .contact-avail .avail-dot { margin-top: 0.35rem; }
+  .contact-channels { flex-wrap: wrap; gap: var(--sp-md); }
 }
 
 .contact-channels {
@@ -2132,7 +2139,9 @@ html[data-page="home"] body {
   }
   /* Modal close — minimum 44px tap target */
   .modal-close { min-height: 44px; display: inline-flex; align-items: center; }
-  /* Modal text — smaller on mobile */
+  /* Modal text — smaller on mobile, and stack title above facts so they don't
+     collide in the narrow caption row */
+  .project-modal-meta { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
   .project-modal-title { font-size: 0.95rem; letter-spacing: -0.01em; }
   .project-modal-facts { font-size: 0.6rem; letter-spacing: 0.1em; }
   .modal-close { font-size: 0.6rem; padding: 0.5rem 1rem; }
@@ -2152,19 +2161,19 @@ html[data-page="home"] body {
     min-height: 100svh;
     gap: var(--sp-md);
   }
-  .about-corner-tl {
+  .about-corner-tl,
+  .about-corner-tr,
+  .about-corner-bl,
+  .about-corner-br {
     position: static;
     max-width: 100%;
+    text-align: left;
+    right: auto;
   }
   .about-big-name {
     font-size: clamp(3.2rem, 18vw, 6rem);
     text-align: left;
     align-self: flex-start;
-  }
-  .about-corner-br {
-    position: static;
-    max-width: 100%;
-    text-align: left;
   }
   /* Shrink home title a touch more so "ordinary," stays on one line */
   .home-title { font-size: clamp(2rem, 9vw, 3rem); }
