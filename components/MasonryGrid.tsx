@@ -4,7 +4,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CATEGORIES, Project } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
+import { ASPECT_RATIO } from '@/lib/aspectRatio';
 import BeforeAfterVideo from '@/components/BeforeAfterVideo';
+
+// Fallback ratios for items whose thumbnail couldn't be measured.
+const RATIO_FALLBACK: Record<string, number> = { portrait: 0.5625, square: 1, landscape: 1.778 };
+// A card is "wide" (spans two columns) at/above this ratio.
+const WIDE_THRESHOLD = 1.15;
+const aspectOf = (item: Project) => ASPECT_RATIO[item.id] ?? RATIO_FALLBACK[item.ratio] ?? 0.5625;
 
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
@@ -390,7 +397,7 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
           {filtered.map((item, idx) => (
             <div
               key={`${activeFilter}-${item.id}`}
-              className={`masonry-item${item.ratio !== 'portrait' ? ' masonry-item-landscape' : ''}`}
+              className={`masonry-item${aspectOf(item) >= WIDE_THRESHOLD ? ' masonry-item-landscape' : ''}`}
               style={{ animationDelay: `${Math.min(idx, CARD_STAGGER_CAP) * CARD_STAGGER_MS}ms` }}
               role="button"
               tabIndex={0}
@@ -428,9 +435,12 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
                 <div
                   className={`item-thumb ${item.ratio}`}
                   data-bg={thumbSrc(item) ?? undefined}
-                  style={thumbSrc(item)
-                    ? { backgroundSize: 'cover', backgroundPosition: 'center' }
-                    : { background: 'var(--surface)' }}
+                  style={{
+                    aspectRatio: String(aspectOf(item)),
+                    ...(thumbSrc(item)
+                      ? { backgroundSize: 'cover', backgroundPosition: 'center' }
+                      : { background: 'var(--surface)' }),
+                  }}
                 />
                 {/* Blurred duplicate — masked to bottom, creates gradient-blur effect */}
                 <div
