@@ -17,6 +17,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     ? { before: project.beforeVideoUrl, after: project.afterVideoUrl }
     : null;
   const slides = project.images && project.images.length > 0 ? project.images : null;
+  // Native video sizes to its own aspect ratio; the wrapper shrink-wraps it.
+  const showFitVideo = !compare && !!project.directVideoUrl;
 
   useEffect(() => {
     setMounted(true);
@@ -71,7 +73,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       aria-label={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className={`modal-inner project-modal-inner${project.ratio === 'portrait' ? ' project-modal-portrait' : ''}`}>
+      <div
+        className={`modal-inner project-modal-inner${
+          showFitVideo ? ' project-modal-fit' : project.ratio === 'portrait' ? ' project-modal-portrait' : ''
+        }`}
+      >
         {compare ? (
           <BeforeAfterVideo
             beforeSrc={compare.before}
@@ -80,11 +86,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           />
         ) : project.directVideoUrl ? (
           // Native video: starts immediately (no iframe-player bootstrap) and is
-          // usually already cached from the grid-card hover.
+          // usually already cached from the grid-card hover. Sizes to its own
+          // aspect ratio (16:9, 4:5, square, vertical) — no forced shape.
           <video
             src={project.directVideoUrl}
             poster={project.thumbnail ?? undefined}
-            className={`project-modal-iframe project-modal-video${project.ratio === 'portrait' ? ' project-modal-iframe-portrait' : ''}`}
+            className="project-modal-video"
             controls
             autoPlay
             playsInline
