@@ -481,9 +481,8 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
                   </div>
                 )}
                 <div className="item-caption">
-                  <div className="item-cat">{item.cat}</div>
+                  <div className="item-cat">{CATEGORIES.find((c) => c.id === item.cat)?.label ?? item.cat}</div>
                   <div className="item-title">{item.title}</div>
-                  {item.desc && <div className="item-desc">{item.desc}</div>}
                 </div>
               </div>
             </div>
