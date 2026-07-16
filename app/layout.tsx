@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { Syne, Figtree, Syne_Mono } from 'next/font/google';
+import { Syne, Manrope, Bitcount_Grid_Single } from 'next/font/google';
 
 const syne = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-syne', display: 'swap' });
-const figtree = Figtree({ subsets: ['latin'], weight: ['300', '400', '500', '600'], variable: '--font-figtree', display: 'swap' });
-const syneMono = Syne_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-syne-mono', display: 'swap' });
+const manrope = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600'], variable: '--font-manrope', display: 'swap' });
+const bitcount = Bitcount_Grid_Single({ subsets: ['latin'], variable: '--font-bitcount', display: 'swap' });
 
 export const metadata: Metadata = {
   icons: {
@@ -53,7 +53,7 @@ const ANTI_FOUC = `(function(){var t=localStorage.getItem('aa-theme')||(window.m
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${figtree.variable} ${syneMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${manrope.variable} ${bitcount.variable}`}>
       <head suppressHydrationWarning>
         {/* Warm the DNS + TLS handshake to Bunny's CDN (videos/thumbnails) and
             Cloudinary (images) so the first hover/click request isn't cold. */}

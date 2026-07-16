@@ -14,9 +14,9 @@
   --glass: rgba(255, 255, 255, 0.045);
   --glass-border: rgba(255, 255, 255, 0.08);
   --font-display: var(--font-syne), sans-serif;
-  --font-body: var(--font-figtree), sans-serif;
-  --font-mono: var(--font-syne-mono), monospace;
-  --font-pixel: var(--font-syne-mono), monospace;
+  --font-body: var(--font-manrope), sans-serif;
+  --font-mono: var(--font-bitcount), monospace;
+  --font-pixel: var(--font-bitcount), monospace;
   --sp-xs: 0.5rem;
   --sp-sm: 0.875rem;
   --sp-md: 1.5rem;
