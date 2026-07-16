@@ -31,7 +31,6 @@ export default function BackgroundVideo() {
         />
       </video>
       <div id="bgWash" />
-      <div id="grain" aria-hidden="true" />
     </>
   );
 }
