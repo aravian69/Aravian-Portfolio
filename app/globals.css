@@ -1,5 +1,11 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ── LENIS smooth scroll ── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
 :root {
   --accent: oklch(91% 0.27 128);
   --accent2: oklch(74% 0.22 128);
@@ -976,8 +982,11 @@ nav {
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(18px);
-  transform: scale(1.08); /* prevent blur edge fringing */
+  /* Lighter blur radius: ~90 live blur layers were the main scroll-fps cost,
+     and momentum smooth-scroll amplifies any jank. 9px keeps the soft look at
+     roughly half the GPU cost. */
+  filter: blur(9px);
+  transform: scale(1.06); /* prevent blur edge fringing */
   /* Fade in from transparent at top to fully blurred at bottom */
   -webkit-mask-image: linear-gradient(to bottom, transparent 55%, black 85%);
   mask-image: linear-gradient(to bottom, transparent 55%, black 85%);

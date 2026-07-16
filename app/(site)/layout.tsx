@@ -3,6 +3,7 @@ import Nav from '@/components/Nav';
 import BackgroundVideo from '@/components/BackgroundVideo';
 import PageMeta from '@/components/PageMeta';
 import Footer from '@/components/Footer';
+import SmoothScroll from '@/components/SmoothScroll';
 import TransitionLoader from '@/components/TransitionLoader';
 
 // All public-facing pages live under this layout. The Keystatic admin lives
@@ -10,6 +11,7 @@ import TransitionLoader from '@/components/TransitionLoader';
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <SmoothScroll />
       <TransitionLoader />
       <PageMeta />
       <BackgroundVideo />
