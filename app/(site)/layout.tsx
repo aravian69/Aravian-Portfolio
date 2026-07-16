@@ -20,6 +20,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Footer />
       </div>
+      <div className="vignette" aria-hidden="true" />
     </>
   );
 }

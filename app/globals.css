@@ -1,5 +1,31 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ── CINEMATIC VIGNETTE (post-fx look) ── */
+/* Edge darkening + a faint accent-tinted lens fringe at the corners, to fake the
+   "graded footage" post look. Sits above content, below the modal (z 9999) so a
+   playing video stays clean. */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background:
+    radial-gradient(ellipse 135% 105% at 50% 48%, transparent 56%, rgba(0, 0, 0, 0.16) 78%, rgba(0, 0, 0, 0.42) 100%);
+}
+.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 135% 105% at 50% 48%, transparent 74%, rgba(var(--accent2-rgb), 0.05) 100%);
+  mix-blend-mode: screen;
+}
+[data-theme="light"] .vignette {
+  background:
+    radial-gradient(ellipse 135% 105% at 50% 48%, transparent 60%, rgba(30, 26, 20, 0.14) 100%);
+}
+[data-theme="light"] .vignette::after { display: none; }
+
 /* ── LENIS smooth scroll ── */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
