@@ -151,7 +151,6 @@ html.theme-transitioning .masonry-item *::after {
   opacity: 1;
   transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  cursor: none;
 }
 .tl-out { opacity: 0; }
 
@@ -206,53 +205,6 @@ html.theme-transitioning .masonry-item *::after {
 @keyframes tlFadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
-}
-
-/* ── CUSTOM CURSOR ── */
-@media (hover: hover) {
-  html, html * { cursor: none !important; }
-}
-
-.is-loading .cursor-dot,
-.is-loading .cursor-ring { opacity: 0 !important; }
-
-.cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 6px; height: 6px;
-  margin: -3px 0 0 -3px;
-  border-radius: 50%;
-  background: var(--accent);
-  pointer-events: none;
-  z-index: 999999;
-  will-change: transform;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.cursor-ring {
-  position: fixed;
-  top: 0; left: 0;
-  width: 32px; height: 32px;
-  margin: -16px 0 0 -16px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(var(--accent-rgb), 0.42);
-  pointer-events: none;
-  z-index: 999998;
-  will-change: transform;
-  opacity: 0;
-  transition:
-    width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    margin 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.25s ease,
-    opacity 0.2s ease;
-}
-
-.cursor-ring.cursor-hover {
-  width: 52px; height: 52px;
-  margin: -26px 0 0 -26px;
-  border-color: rgba(var(--accent-rgb), 0.78);
 }
 
 /* ── GRAIN ── */
