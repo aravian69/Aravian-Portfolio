@@ -2275,3 +2275,95 @@ html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE: native-app shell
+   Phones get an app anatomy rather than a shrunken desktop page: a slim top
+   bar (brand + theme), a thumb-reach bottom tab bar, a swipeable chip row,
+   and left-aligned screen titles so the work shows up immediately.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Top app-bar — brand + theme only, with a scrim so content reads under it */
+  nav {
+    align-items: center;
+    padding: 0.7rem var(--sp-md);
+    background: linear-gradient(to bottom, var(--bg) 58%, transparent);
+  }
+  .nav-name, .nav-name svg { height: 34px; }
+
+  /* Bottom tab bar — the icon pill detaches from the header and docks into
+     the thumb zone, clearing the iPhone home indicator. */
+  .nav-glass-wrap {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    transform: translateX(-50%);
+    z-index: 1000;
+    /* Docked over scrolling content, so it has to read as solid chrome. The
+       backdrop-filter can't sample the page from inside nav's stacking
+       context, so carry the opacity here instead of relying on the blur. */
+    background: rgba(10, 10, 12, 0.96);
+  }
+  [data-theme="light"] .nav-glass-wrap { background: rgba(250, 248, 244, 0.97); }
+  .nav-links { gap: 2px; }
+  .nav-links a {
+    min-width: 58px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 0.5rem 0.7rem;
+  }
+  /* Keep page content (and the footer) clear of the docked bar */
+  #app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 78px); }
+
+  /* Screen title — left-aligned and compact, like an app screen header */
+  .work-header {
+    padding: 74px var(--sp-md) var(--sp-xs);
+    text-align: left;
+  }
+  .work-header .section-eyebrow { justify-content: flex-start; }
+  .work-title { font-size: clamp(2rem, 9vw, 2.75rem); margin-bottom: var(--sp-sm); }
+
+  /* Filter chips — one swipeable row instead of three wrapped rows */
+  .filter-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px var(--sp-md);
+    margin-bottom: var(--sp-md);
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .filter-tab { flex: 0 0 auto; scroll-snap-align: start; }
+}
+
+/* Contact — actions become full-width tappable rows (app contact-card list) */
+@media (max-width: 640px) {
+  .contact-channels {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: var(--sp-md);
+  }
+  .contact-channel {
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 1rem;
+    border: 0.5px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass);
+  }
+}
+
+/* About — identity first. The desktop corners stack in a hierarchy that reads:
+   name, bio, then the supporting metadata. */
+@media (max-width: 480px) {
+  .about-big-name  { order: 1; }
+  .about-corner-br { order: 2; } /* bio */
+  .about-corner-tl { order: 3; } /* skills */
+  .about-corner-tr { order: 4; } /* clients */
+  .about-corner-bl { order: 5; } /* toolkit */
+}
