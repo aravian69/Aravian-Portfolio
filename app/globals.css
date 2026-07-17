@@ -2316,27 +2316,29 @@ html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
   /* Keep page content (and the footer) clear of the docked bar */
   #app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 78px); }
 
-  /* Screen title — left-aligned and compact, like an app screen header */
+  /* Screen title — left-aligned and compact, like an app screen header.
+     Clears the 56px top bar without leaving a dead gap under the logo. */
   .work-header {
-    padding: 74px var(--sp-md) var(--sp-xs);
+    padding: 52px var(--sp-md) var(--sp-xs);
     text-align: left;
   }
   .work-header .section-eyebrow { justify-content: flex-start; }
   .work-title { font-size: clamp(2rem, 9vw, 2.75rem); margin-bottom: var(--sp-sm); }
 
-  /* Filter chips — one swipeable row instead of three wrapped rows */
+  /* Filter chips — one swipeable row instead of three wrapped rows.
+     No scroll-snap: it auto-scrolled the row by the padding on load, pulling
+     the first chip flush to the edge and out of line with the grid. */
   .filter-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
-    scroll-snap-type: x proximity;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     padding: 2px var(--sp-md);
     margin-bottom: var(--sp-md);
   }
   .filter-tabs::-webkit-scrollbar { display: none; }
-  .filter-tab { flex: 0 0 auto; scroll-snap-align: start; }
+  .filter-tab { flex: 0 0 auto; }
 }
 
 /* Contact — actions become full-width tappable rows (app contact-card list) */
