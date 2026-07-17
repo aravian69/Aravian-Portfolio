@@ -1,3 +1,5 @@
+import ArrowUpRight from '@/components/ArrowUpRight';
+
 export default function Footer() {
   return (
     <footer className="site-footer">
@@ -11,7 +13,7 @@ export default function Footer() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Instagram <span className="social-arrow">↗</span>
+        Instagram <ArrowUpRight />
       </a>
       <span className="site-footer-copy">© 2026 Abdul Aziz</span>
       <span className="site-footer-loc">Jakarta, Indonesia</span>

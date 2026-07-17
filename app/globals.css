@@ -1468,7 +1468,14 @@ nav {
 
 .social-link:hover { opacity: 1; }
 [data-theme="light"] .social-link:hover { opacity: 0.7; }
-.social-arrow { font-size: 0.75rem; }
+.social-arrow {
+  width: 0.72em;
+  height: 0.72em;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: baseline;
+  opacity: 0.75;
+}
 
 .contact-footer {
   display: flex;
@@ -2293,54 +2300,62 @@ html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
 
   /* Bottom tab bar — the icon pill detaches from the header and docks into
      the thumb zone, clearing the iPhone home indicator. */
-  /* Full-width and flush to the bottom edge, like a real tab bar. A floating
-     pill leaves gaps under and beside it and reads as a widget, not chrome.
-     The home-indicator inset is padding INSIDE the bar, not a gap below it. */
-  .nav-glass-wrap {
+  /* Floating dock in the thumb zone: the tab capsule plus the theme toggle as
+     a separate round button beside it. */
+  .nav-right {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: none;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    transform: translateX(-50%);
     z-index: 1000;
-    border-radius: 0;
-    padding: 6px 0 calc(env(safe-area-inset-bottom, 0px) + 6px);
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-glass-wrap {
+    padding: 5px;
     /* Solid: backdrop-filter can't sample the page from inside nav's
        stacking context, so the opacity has to carry it. */
     background: rgba(10, 10, 12, 0.97);
-    border-top: 0.5px solid rgba(255, 255, 255, 0.08);
-    box-shadow: none;
   }
-  .nav-glass-wrap::before { display: none; }
-  [data-theme="light"] .nav-glass-wrap {
-    background: rgba(250, 248, 244, 0.98);
-    border-top-color: rgba(0, 0, 0, 0.08);
-    box-shadow: none;
-  }
+  [data-theme="light"] .nav-glass-wrap { background: rgba(250, 248, 244, 0.98); }
 
-  .nav-links { gap: 0; width: 100%; justify-content: space-around; }
+  .nav-links { gap: 2px; }
   .nav-links a {
-    flex: 1;
+    min-width: 52px;
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0;
-    border-radius: 0;
+    padding: 0.5rem 0.6rem;
+    border-radius: 14px;
   }
-  /* Active tab = colour + the accent dot, not a raised white chip (which on a
-     near-white bar read as a seam). */
+  /* Active tab = outlined squircle + accent icon. A filled white chip read as
+     a seam against the near-white light-mode capsule. */
   .nav-links a.active,
   [data-theme="light"] .nav-links a.active {
     background: transparent;
     box-shadow: none;
+    border: 1px solid rgba(var(--accent2-rgb), 0.55);
     color: var(--accent);
   }
   [data-theme="light"] .nav-links a.active { color: var(--accent2); }
-  .nav-links a.active::after { transform: translateX(-50%) scale(1); }
+  .nav-links a.active::after { transform: translateX(-50%) scale(0); }
 
-  /* Keep page content (and the footer) clear of the docked bar */
-  #app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px); }
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(10, 10, 12, 0.97);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 0 0.5px rgba(255, 255, 255, 0.09);
+  }
+  [data-theme="light"] .theme-toggle {
+    background: rgba(250, 248, 244, 0.98);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Keep page content (and the footer) clear of the dock */
+  #app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px); }
 
   /* Screen title — left-aligned and compact, like an app screen header.
      Clears the 56px top bar without leaving a dead gap under the logo. */

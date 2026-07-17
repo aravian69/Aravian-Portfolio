@@ -1,3 +1,4 @@
+import ArrowUpRight from '@/components/ArrowUpRight';
 import { getContact } from '@/lib/projects.server';
 
 function letters(text: string, key: string) {
@@ -45,7 +46,7 @@ export default async function ContactPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp <span className="social-arrow">↗</span>
+                WhatsApp <ArrowUpRight />
               </a>
             )}
             {contact.instagram && (
@@ -55,7 +56,7 @@ export default async function ContactPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Instagram <span className="social-arrow">↗</span>
+                Instagram <ArrowUpRight />
               </a>
             )}
           </div>
