@@ -37,13 +37,14 @@ export interface Project {
   hidden?: boolean;
 }
 
-export const CATEGORIES: { id: FilterId; label: string }[] = [
+/** `slug` is the pretty URL segment for /work/<slug>. 'All' has none (it's /work). */
+export const CATEGORIES: { id: FilterId; label: string; slug?: string }[] = [
   { id: 'all',     label: 'All' },
-  { id: 'vfx',     label: 'VFX' },
-  { id: 'color',   label: 'Color Grading' },
-  { id: 'motion',  label: 'Motion Graphics' },
-  { id: 'ai',      label: 'AI Video' },
-  { id: 'editing', label: 'Video Editing' },
-  { id: 'graphic', label: 'Graphic Design' },
-  { id: '3d',      label: '3D' },
+  { id: 'vfx',     label: 'VFX',             slug: 'vfx' },
+  { id: 'color',   label: 'Color Grading',   slug: 'color-grading' },
+  { id: 'motion',  label: 'Motion Graphics', slug: 'motion-graphics' },
+  { id: 'ai',      label: 'AI Video',        slug: 'ai-video' },
+  { id: 'editing', label: 'Video Editing',   slug: 'video-editing' },
+  { id: 'graphic', label: 'Graphic Design',  slug: 'graphic-design' },
+  { id: '3d',      label: '3D',              slug: '3d' },
 ];

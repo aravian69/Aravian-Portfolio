@@ -1,6 +1,14 @@
 import { MetadataRoute } from 'next';
+import { CATEGORIES } from '@/lib/projects';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.filter((c) => c.slug).map((c) => ({
+    url: `https://www.rav709.site/work/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   return [
     {
       url: 'https://www.rav709.site',
@@ -14,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    ...categoryUrls,
     {
       url: 'https://www.rav709.site/about',
       lastModified: new Date(),

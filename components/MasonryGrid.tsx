@@ -195,8 +195,8 @@ const COL_BREAKPOINTS: [number, number][] = [
   [1440, 5],
 ];
 
-export default function MasonryGrid({ projects }: { projects: Project[] }) {
-  const [activeFilter, setActiveFilter] = useState('all');
+export default function MasonryGrid({ projects, initialFilter = 'all' }: { projects: Project[]; initialFilter?: string }) {
+  const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [selected, setSelected] = useState<Project | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useRef(false);
@@ -206,24 +206,29 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
     reduceMotion.current = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
   }, []);
 
-  // Deep-linkable filters: read ?cat= on load (so /work?cat=ai is shareable)
-  // and keep the grid in sync with the browser back/forward buttons.
+  // Deep-linkable filters at pretty paths (/work/ai-video). The initial filter
+  // comes from the route (SSR); keep in sync with back/forward, and honour a
+  // legacy ?cat= query on first load so older shared links still resolve.
   useEffect(() => {
-    const fromUrl = () => {
-      const cat = new URLSearchParams(window.location.search).get('cat');
-      return cat && CATEGORIES.some((c) => c.id === cat) ? cat : 'all';
+    const fromPath = () => {
+      const slug = window.location.pathname.split('/').filter(Boolean)[1];
+      return CATEGORIES.find((c) => c.slug === slug)?.id ?? 'all';
     };
-    setActiveFilter(fromUrl());
-    const onPop = () => setActiveFilter(fromUrl());
+    const legacyQuery = new URLSearchParams(window.location.search).get('cat');
+    if (fromPath() === 'all' && legacyQuery && CATEGORIES.some((c) => c.id === legacyQuery)) {
+      setActiveFilter(legacyQuery);
+    }
+    const onPop = () => setActiveFilter(fromPath());
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
-  // Change the filter and reflect it in the URL (a shareable link per category).
+  // Change the filter and reflect it in a pretty, shareable URL, without a full
+  // navigation (pushState keeps the grid mounted, so filtering stays instant).
   const selectFilter = (id: string) => {
     setActiveFilter(id);
-    const url = id === 'all' ? '/work' : `/work?cat=${id}`;
-    window.history.pushState({ cat: id }, '', url);
+    const slug = CATEGORIES.find((c) => c.id === id)?.slug;
+    window.history.pushState({ cat: id }, '', slug ? `/work/${slug}` : '/work');
   };
 
   // Scroll to top of grid area whenever the filter changes
