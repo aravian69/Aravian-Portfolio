@@ -206,6 +206,26 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
     reduceMotion.current = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
   }, []);
 
+  // Deep-linkable filters: read ?cat= on load (so /work?cat=ai is shareable)
+  // and keep the grid in sync with the browser back/forward buttons.
+  useEffect(() => {
+    const fromUrl = () => {
+      const cat = new URLSearchParams(window.location.search).get('cat');
+      return cat && CATEGORIES.some((c) => c.id === cat) ? cat : 'all';
+    };
+    setActiveFilter(fromUrl());
+    const onPop = () => setActiveFilter(fromUrl());
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  // Change the filter and reflect it in the URL (a shareable link per category).
+  const selectFilter = (id: string) => {
+    setActiveFilter(id);
+    const url = id === 'all' ? '/work' : `/work?cat=${id}`;
+    window.history.pushState({ cat: id }, '', url);
+  };
+
   // Scroll to top of grid area whenever the filter changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -368,7 +388,7 @@ export default function MasonryGrid({ projects }: { projects: Project[] }) {
           <button
             key={id}
             className={`filter-tab${activeFilter === id ? ' active' : ''}`}
-            onClick={() => setActiveFilter(id)}
+            onClick={() => selectFilter(id)}
           >
             {label}
           </button>
