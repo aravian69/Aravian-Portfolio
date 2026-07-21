@@ -482,7 +482,8 @@ nav {
   z-index: 1;
 }
 
-.home-title .acc { color: var(--accent); }
+.home-title .acc,
+.nf-title .acc { color: var(--accent); }
 
 /* Prevent letter-span groups from breaking mid-character on any word */
 .home-title .outline,
@@ -2409,4 +2410,66 @@ html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
   .about-corner-tl { order: 3; } /* skills */
   .about-corner-tr { order: 4; } /* clients */
   .about-corner-bl { order: 5; } /* toolkit */
+}
+
+/* ── 404 ── */
+/* Renders under the minimal root layout (no site chrome), so it carries its own
+   full-viewport composition. Left-aligned to match the home/about voice. */
+.nf-wrap {
+  min-height: 100svh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--sp-sm);
+  padding: var(--sp-2xl) var(--sp-lg);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.nf-eyebrow {
+  font-family: var(--font-pixel);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.nf-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent2);
+}
+
+.nf-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 7.5rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.nf-lead {
+  font-family: var(--font-body);
+  font-size: var(--tx-md);
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 42ch;
+  line-height: 1.6;
+  margin-top: var(--sp-xs);
+}
+
+.nf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  margin-top: var(--sp-md);
+}
+
+@media (max-width: 640px) {
+  .nf-wrap { padding: var(--sp-xl) var(--sp-md); }
 }
