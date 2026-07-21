@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES, Project } from '@/lib/projects';
+import { CATEGORIES, type Category, Project } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
 import { ASPECT_RATIO } from '@/lib/aspectRatio';
 import BeforeAfterVideo from '@/components/BeforeAfterVideo';
@@ -243,6 +243,17 @@ export default function MasonryGrid({ projects, initialFilter = 'all' }: { proje
     return () => { delete document.documentElement.dataset.workCat; };
   }, [activeFilter]);
 
+  // Only show filters that actually have work behind them, so a visitor can
+  // never land on an empty category. A discipline reappears on its own as soon
+  // as its first project is published (or un-hidden). The active one is kept
+  // even if empty, so a deep link doesn't leave an orphaned selection.
+  const visibleCategories = useMemo(() => {
+    const withWork = new Set(projects.map((p) => p.cat));
+    return CATEGORIES.filter(
+      (c) => c.id === 'all' || withWork.has(c.id as Category) || c.id === activeFilter
+    );
+  }, [projects, activeFilter]);
+
   // Order is precomputed in lib/hueOrder.ts (see scripts/compute-hues.mjs), so
   // it's identical on the server and client and never changes after mount —
   // the grid paints its final order on first render, no async re-sort flash.
@@ -389,7 +400,7 @@ export default function MasonryGrid({ projects, initialFilter = 'all' }: { proje
   return (
     <>
       <div className="filter-tabs">
-        {CATEGORIES.map(({ id, label }) => (
+        {visibleCategories.map(({ id, label }) => (
           <button
             key={id}
             className={`filter-tab${activeFilter === id ? ' active' : ''}`}
