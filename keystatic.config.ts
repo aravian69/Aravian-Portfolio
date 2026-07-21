@@ -124,6 +124,29 @@ export default config({
       },
     }),
 
+    work: singleton({
+      label: 'Work page',
+      path: 'content/work',
+      format: { data: 'yaml' },
+      schema: {
+        hiddenCategories: fields.multiselect({
+          label: 'Hide these filter buttons',
+          description:
+            'Tick a discipline to remove its filter button from the Work page. Categories with no projects are already hidden automatically, so you only need this to hide one that DOES have work.',
+          options: [
+            { label: 'VFX', value: 'vfx' },
+            { label: 'Color Grading', value: 'color' },
+            { label: 'Motion Graphics', value: 'motion' },
+            { label: 'AI Video', value: 'ai' },
+            { label: 'Video Editing', value: 'editing' },
+            { label: 'Graphic Design', value: 'graphic' },
+            { label: '3D', value: '3d' },
+          ],
+          defaultValue: [],
+        }),
+      },
+    }),
+
     about: singleton({
       label: 'About page',
       path: 'content/about',

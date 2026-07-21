@@ -195,7 +195,16 @@ const COL_BREAKPOINTS: [number, number][] = [
   [1440, 5],
 ];
 
-export default function MasonryGrid({ projects, initialFilter = 'all' }: { projects: Project[]; initialFilter?: string }) {
+export default function MasonryGrid({
+  projects,
+  initialFilter = 'all',
+  hiddenCategories = [],
+}: {
+  projects: Project[];
+  initialFilter?: string;
+  /** Category ids whose filter button is manually hidden in the CMS. */
+  hiddenCategories?: string[];
+}) {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [selected, setSelected] = useState<Project | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -243,16 +252,20 @@ export default function MasonryGrid({ projects, initialFilter = 'all' }: { proje
     return () => { delete document.documentElement.dataset.workCat; };
   }, [activeFilter]);
 
-  // Only show filters that actually have work behind them, so a visitor can
-  // never land on an empty category. A discipline reappears on its own as soon
-  // as its first project is published (or un-hidden). The active one is kept
-  // even if empty, so a deep link doesn't leave an orphaned selection.
+  // Which filter buttons to show. Two rules, manual wins:
+  //  1. Ticked in the CMS ("Hide these filter buttons") → always hidden.
+  //  2. Otherwise show it if it has work (a discipline reappears on its own
+  //     once its first project is published), keeping the active one visible
+  //     so a deep link doesn't leave an orphaned selection.
   const visibleCategories = useMemo(() => {
     const withWork = new Set(projects.map((p) => p.cat));
-    return CATEGORIES.filter(
-      (c) => c.id === 'all' || withWork.has(c.id as Category) || c.id === activeFilter
-    );
-  }, [projects, activeFilter]);
+    const hidden = new Set(hiddenCategories);
+    return CATEGORIES.filter((c) => {
+      if (c.id === 'all') return true;
+      if (hidden.has(c.id)) return false;
+      return withWork.has(c.id as Category) || c.id === activeFilter;
+    });
+  }, [projects, activeFilter, hiddenCategories]);
 
   // Order is precomputed in lib/hueOrder.ts (see scripts/compute-hues.mjs), so
   // it's identical on the server and client and never changes after mount —

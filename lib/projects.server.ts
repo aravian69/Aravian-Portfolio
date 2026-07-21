@@ -103,6 +103,15 @@ export async function getShowreelUrl(): Promise<string | null> {
   return home?.showreelUrl || null;
 }
 
+/**
+ * Category ids whose filter button is manually hidden on the Work page.
+ * (Empty categories hide themselves; this is the manual override.)
+ */
+export async function getHiddenCategories(): Promise<string[]> {
+  const work = await reader.singletons.work.read();
+  return work?.hiddenCategories ? [...work.hiddenCategories] : [];
+}
+
 export interface AboutInfo {
   portraitUrl: string | null;
   skills: string;
