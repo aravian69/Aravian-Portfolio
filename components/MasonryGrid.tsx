@@ -418,30 +418,9 @@ export default function MasonryGrid({
         for (let c = bestCol; c < bestCol + span; c++) heights[c] = newH;
       });
 
-      // Backfill any leftover column space with brand-color spacer blocks.
-      // Re-use existing .grid-spacer DOM nodes so React doesn't fight us.
-      const spacerRoot = grid.querySelector<HTMLElement>('.grid-spacer-layer');
-      if (spacerRoot) spacerRoot.innerHTML = '';
+      // No backfill: a masonry's ragged bottom edge reads as organic, while
+      // filler "coming soon" tiles read as missing content.
       const maxH = Math.max(...heights);
-      if (spacerRoot) {
-        for (let c = 0; c < cols; c++) {
-          let cursor = heights[c];
-          while (maxH - cursor > colW * 0.5) {
-            // Decide spacer shape: square if room, else short rectangle
-            const remaining = maxH - cursor - gap;
-            const spacerH = Math.min(colW, remaining);
-            const block = document.createElement('div');
-            block.className = `grid-spacer grid-spacer-${(c + Math.floor(cursor / 100)) % 2 === 0 ? 'lime' : 'plum'}`;
-            block.style.width = `${colW}px`;
-            block.style.height = `${spacerH}px`;
-            block.style.left = `${padL + c * (colW + gap)}px`;
-            block.style.top = `${padT + cursor}px`;
-            spacerRoot.appendChild(block);
-            cursor += spacerH + gap;
-          }
-        }
-      }
-
       const totalH = maxH - gap;
       grid.style.height = `${padT + Math.max(0, totalH) + (parseFloat(cs.paddingBottom) || 0)}px`;
     };
@@ -504,7 +483,6 @@ export default function MasonryGrid({
           ref={gridRef}
           style={{ visibility: 'hidden' }}
         >
-          <div className="grid-spacer-layer" aria-hidden="true" />
           {filtered.map((item, idx) => (
             <div
               key={`${activeFilter}-${item.id}`}
@@ -598,6 +576,13 @@ export default function MasonryGrid({
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {filtered.length > 0 && (
+        <div className="grid-endnote">
+          <span className="grid-endnote-dot" aria-hidden="true" />
+          More work soon
         </div>
       )}
 

@@ -792,62 +792,28 @@ nav {
   .back-to-top-label { display: none; }
 }
 
-.grid-spacer-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.grid-spacer {
-  position: absolute;
-  border-radius: 10px;
-  overflow: hidden;
-  opacity: 0;
-}
-
-.masonry-grid.is-laid .grid-spacer {
-  animation: cineFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.grid-spacer::before {
-  content: 'More work soon';
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  z-index: 2;
+/* Quiet sign-off under the grid — replaces the old filler "coming soon" tiles,
+   which read as missing content. */
+.grid-endnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: var(--sp-md) var(--sp-md) var(--sp-xl);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: var(--tx-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: oklch(98% 0.005 303 / 0.6);
+  color: var(--subtle);
 }
-
-.grid-spacer::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 55%;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 80%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Dark theme */
-[data-theme="dark"] .grid-spacer,
-.grid-spacer {
-  background: var(--surface);
-}
-
-/* Light theme */
-[data-theme="light"] .grid-spacer {
-  background: oklch(92% 0.005 303);
-}
-
-[data-theme="light"] .grid-spacer::before {
-  color: rgba(0,0,0,0.45);
+.grid-endnote-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 0 0 rgba(var(--accent2-rgb), 0.5);
+  animation: ping 1.8s ease-out infinite;
+  flex-shrink: 0;
 }
 
 .masonry-item {
