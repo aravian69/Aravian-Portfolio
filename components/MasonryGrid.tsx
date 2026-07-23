@@ -17,8 +17,29 @@ const aspectOf = (item: Project) => ASPECT_RATIO[item.id] ?? RATIO_FALLBACK[item
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
   const [slideIdx, setSlideIdx] = useState(0);
+  const [copied, setCopied] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  // Native share sheet where available (phones), copy-link elsewhere. The
+  // project URL is already in the address bar when the modal is open.
+  const share = async () => {
+    const url = window.location.href;
+    const data = {
+      title: `${project.title} — Abdul Aziz`,
+      text: project.desc ? `${project.title} · ${project.desc}` : project.title,
+      url,
+    };
+    if (navigator.share) {
+      try { await navigator.share(data); } catch { /* user dismissed */ }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch { /* clipboard unavailable */ }
+  };
 
   const compare = project.beforeVideoUrl && project.afterVideoUrl
     ? { before: project.beforeVideoUrl, after: project.afterVideoUrl }
@@ -170,7 +191,22 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           {project.year && <li>{project.year}</li>}
         </ul>
       </div>
-      <button ref={closeRef} className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
+      <div className="modal-actions">
+        <button className="modal-close modal-share" onClick={share}>
+          {copied ? (
+            <>✓ &nbsp; Copied</>
+          ) : (
+            <>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M22 2L11 13" />
+                <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+              &nbsp; Share
+            </>
+          )}
+        </button>
+        <button ref={closeRef} className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
+      </div>
     </div>,
     target
   );
@@ -227,10 +263,36 @@ export default function MasonryGrid({
     if (fromPath() === 'all' && legacyQuery && CATEGORIES.some((c) => c.id === legacyQuery)) {
       setActiveFilter(legacyQuery);
     }
-    const onPop = () => setActiveFilter(fromPath());
+    // ?p=<id> deep-links straight to a project's modal (shared video links).
+    const projectFromUrl = () => {
+      const pid = new URLSearchParams(window.location.search).get('p');
+      return pid ? projects.find((pr) => pr.id === pid) ?? null : null;
+    };
+    const linked = projectFromUrl();
+    if (linked) setSelected(linked);
+    const onPop = () => {
+      setActiveFilter(fromPath());
+      setSelected(projectFromUrl());
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Opening a project appends ?p=<id> so that exact video is shareable;
+  // closing strips it. Back/forward then reopen/close the modal naturally.
+  const openProject = (item: Project) => {
+    setSelected(item);
+    const u = new URL(window.location.href);
+    u.searchParams.set('p', item.id);
+    window.history.pushState({ p: item.id }, '', u);
+  };
+  const closeProject = () => {
+    setSelected(null);
+    const u = new URL(window.location.href);
+    u.searchParams.delete('p');
+    window.history.pushState({}, '', u);
+  };
 
   // Change the filter and reflect it in a pretty, shareable URL, without a full
   // navigation (pushState keeps the grid mounted, so filtering stays instant).
@@ -451,9 +513,9 @@ export default function MasonryGrid({
               role="button"
               tabIndex={0}
               aria-label={`Open ${item.title}${item.desc ? ` — ${item.desc}` : ''} (${item.cat})`}
-              onClick={() => setSelected(item)}
+              onClick={() => openProject(item)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(item); }
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(item); }
               }}
               onMouseEnter={(e) => {
                 // Play the real 720p footage on hover so the card shows sharp
@@ -540,7 +602,7 @@ export default function MasonryGrid({
       )}
 
       {selected && (
-        <ProjectModal project={selected} onClose={() => setSelected(null)} />
+        <ProjectModal project={selected} onClose={closeProject} />
       )}
     </>
   );
