@@ -55,20 +55,22 @@ export default function BrandSelect({
       </button>
 
       {open && (
-        <ul className="brand-menu" role="listbox" aria-label="Filter by brand">
-          <li role="option" aria-selected={!value}>
-            <button type="button" className={`brand-option${!value ? ' active' : ''}`} onClick={() => pick('')}>
-              All brands
-            </button>
-          </li>
-          {brands.map(([slug, name]) => (
-            <li key={slug} role="option" aria-selected={value === slug}>
-              <button type="button" className={`brand-option${value === slug ? ' active' : ''}`} onClick={() => pick(slug)}>
-                {name}
+        <div className="brand-menu">
+          <ul className="brand-menu-list" role="listbox" aria-label="Filter by brand" data-lenis-prevent>
+            <li role="option" aria-selected={!value}>
+              <button type="button" className={`brand-option${!value ? ' active' : ''}`} onClick={() => pick('')}>
+                All brands
               </button>
             </li>
-          ))}
-        </ul>
+            {brands.map(([slug, name]) => (
+              <li key={slug} role="option" aria-selected={value === slug}>
+                <button type="button" className={`brand-option${value === slug ? ' active' : ''}`} onClick={() => pick(slug)}>
+                  {name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

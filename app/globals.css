@@ -719,17 +719,24 @@ nav {
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
-  min-width: 190px;
-  max-height: 320px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  list-style: none;
-  padding: 6px;
+  min-width: 200px;
   border-radius: 14px;
   background: var(--surface);
   border: 0.5px solid var(--glass-border);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
   animation: brandMenuIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* Bottom fade — signals the list scrolls (there's more below the fold). */
+.brand-menu::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0;
+  height: 34px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(to top, var(--surface) 18%, transparent);
+  pointer-events: none;
 }
 [data-theme="light"] .brand-menu {
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
@@ -737,6 +744,15 @@ nav {
 @keyframes brandMenuIn {
   from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.brand-menu-list {
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  max-height: 384px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .brand-option {
@@ -761,8 +777,15 @@ nav {
   background: rgba(var(--accent2-rgb), 0.12);
   font-weight: 600;
 }
-.brand-menu::-webkit-scrollbar { width: 8px; }
-.brand-menu::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 999px; }
+.brand-menu-list { scrollbar-width: thin; scrollbar-color: rgba(var(--accent2-rgb), 0.45) transparent; }
+.brand-menu-list::-webkit-scrollbar { width: 8px; }
+.brand-menu-list::-webkit-scrollbar-thumb {
+  background: rgba(var(--accent2-rgb), 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.brand-menu-list::-webkit-scrollbar-thumb:hover { background: rgba(var(--accent2-rgb), 0.65); background-clip: padding-box; }
 
 .filter-tab {
   padding: 0.44rem 1.05rem;
