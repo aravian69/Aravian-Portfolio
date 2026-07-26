@@ -16,6 +16,8 @@ export interface Project {
   title:     string;
   desc?:     string;
   cat:       Category;
+  /** Brand/client this was made for; powers the Work-page brand filter. */
+  brand?:    string;
   ratio:     Ratio;
   videoUrl?: string;
   /** Direct .mp4 of the raw/before plate. When set with afterVideoUrl, the modal shows a before/after slider. */

@@ -47,6 +47,10 @@ export default config({
           ],
           defaultValue: 'motion',
         }),
+        brand: fields.text({
+          label: 'Brand / Client',
+          description: 'The brand this was made for (e.g. Le Minerale). Powers the brand filter on the Work page. Leave blank for personal work.',
+        }),
         ratio: fields.select({
           label: 'Orientation',
           options: [

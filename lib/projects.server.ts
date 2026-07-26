@@ -69,6 +69,7 @@ export async function getAllProjects(): Promise<Project[]> {
         title: entry.title,
         desc: entry.desc || undefined,
         cat: entry.cat as Category,
+        brand: entry.brand || undefined,
         ratio: entry.ratio as Ratio,
         videoUrl: m.videoUrl,
         beforeVideoUrl: m.beforeVideoUrl,

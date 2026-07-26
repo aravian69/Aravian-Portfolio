@@ -223,6 +223,8 @@ const TILT_MULTIPLIER    = 3.5;  // deg
 const TILT_SCALE         = 1.015;
 const HUE_FALLBACK       = 9999; // ids missing from HUE_ORDER sort to the end
 
+const brandSlug = (b: string) => b.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 // Breakpoint → column count
 const COL_BREAKPOINTS: [number, number][] = [
   [480,  2],
@@ -242,9 +244,20 @@ export default function MasonryGrid({
   hiddenCategories?: string[];
 }) {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
+  const [activeBrand, setActiveBrand] = useState('');
   const [selected, setSelected] = useState<Project | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useRef(false);
+
+  // Distinct brands present, plus a slug map so a brand is shareable in the URL
+  // (?brand=le-minerale). Built from the data, so new brands appear on their own.
+  const brands = useMemo(() => {
+    const set = new Map<string, string>(); // slug -> display
+    for (const p of projects) {
+      if (p.brand) set.set(brandSlug(p.brand), p.brand);
+    }
+    return [...set.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+  }, [projects]);
 
   // Detect reduced-motion once so hover video-previews can be skipped for it.
   useEffect(() => {
@@ -270,14 +283,32 @@ export default function MasonryGrid({
     };
     const linked = projectFromUrl();
     if (linked) setSelected(linked);
+    // ?brand=<slug> is shareable ("all my Le Minerale work").
+    const brandFromUrl = () => new URLSearchParams(window.location.search).get('brand') ?? '';
+    setActiveBrand(brandFromUrl());
     const onPop = () => {
       setActiveFilter(fromPath());
+      setActiveBrand(brandFromUrl());
       setSelected(projectFromUrl());
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Build the filter URL from category (pretty path) + brand (query), preserving
+  // an open project (?p=). pushState keeps the grid mounted so filtering is instant.
+  const pushUrl = (catId: string, brandSlugVal: string) => {
+    const slug = CATEGORIES.find((c) => c.id === catId)?.slug;
+    const u = new URL(slug && catId !== 'all' ? `/work/${slug}` : '/work', window.location.origin);
+    if (brandSlugVal) u.searchParams.set('brand', brandSlugVal);
+    const pid = new URLSearchParams(window.location.search).get('p');
+    if (pid) u.searchParams.set('p', pid);
+    window.history.pushState({}, '', u.pathname + u.search);
+  };
+
+  const selectFilter = (id: string) => { setActiveFilter(id); pushUrl(id, activeBrand); };
+  const selectBrand = (slug: string) => { setActiveBrand(slug); pushUrl(activeFilter, slug); };
 
   // Opening a project appends ?p=<id> so that exact video is shareable;
   // closing strips it. Back/forward then reopen/close the modal naturally.
@@ -294,18 +325,10 @@ export default function MasonryGrid({
     window.history.pushState({}, '', u);
   };
 
-  // Change the filter and reflect it in a pretty, shareable URL, without a full
-  // navigation (pushState keeps the grid mounted, so filtering stays instant).
-  const selectFilter = (id: string) => {
-    setActiveFilter(id);
-    const slug = CATEGORIES.find((c) => c.id === id)?.slug;
-    window.history.pushState({ cat: id }, '', slug ? `/work/${slug}` : '/work');
-  };
-
-  // Scroll to top of grid area whenever the filter changes
+  // Scroll to top of grid area whenever a filter changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeFilter]);
+  }, [activeFilter, activeBrand]);
 
   // Expose the active category so CSS can shift the page ambiance per filter
   // (subtle glow hue behind the header — range reads as depth, not scatter).
@@ -333,13 +356,15 @@ export default function MasonryGrid({
   // it's identical on the server and client and never changes after mount —
   // the grid paints its final order on first render, no async re-sort flash.
   const filtered = useMemo(() => {
-    const base = activeFilter === 'all'
-      ? projects
-      : projects.filter((p) => p.cat === activeFilter);
+    const base = projects.filter(
+      (p) =>
+        (activeFilter === 'all' || p.cat === activeFilter) &&
+        (!activeBrand || (p.brand && brandSlug(p.brand) === activeBrand))
+    );
     return [...base].sort(
       (a, b) => (HUE_ORDER[a.id] ?? HUE_FALLBACK) - (HUE_ORDER[b.id] ?? HUE_FALLBACK)
     );
-  }, [activeFilter, projects]);
+  }, [activeFilter, activeBrand, projects]);
 
   // Lazily apply thumbnail backgrounds as cards approach the viewport, so a
   // grid of ~90 items doesn't request every image up front.
@@ -453,16 +478,39 @@ export default function MasonryGrid({
 
   return (
     <>
-      <div className="filter-tabs">
-        {visibleCategories.map(({ id, label }) => (
-          <button
-            key={id}
-            className={`filter-tab${activeFilter === id ? ' active' : ''}`}
-            onClick={() => selectFilter(id)}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="filter-row">
+        <div className="filter-tabs">
+          {visibleCategories.map(({ id, label }) => (
+            <button
+              key={id}
+              className={`filter-tab${activeFilter === id ? ' active' : ''}`}
+              onClick={() => selectFilter(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {brands.length > 0 && (
+          <div className={`brand-select${activeBrand ? ' active' : ''}`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3 4h18v3l-7 7v6l-4-2v-4L3 7z" />
+            </svg>
+            <select
+              aria-label="Filter by brand"
+              value={activeBrand}
+              onChange={(e) => selectBrand(e.target.value)}
+            >
+              <option value="">All brands</option>
+              {brands.map(([slug, name]) => (
+                <option key={slug} value={slug}>{name}</option>
+              ))}
+            </select>
+            <svg className="brand-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {filtered.length === 0 ? (

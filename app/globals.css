@@ -665,14 +665,64 @@ nav {
   line-height: 0.95;
 }
 
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm) var(--sp-md);
+  margin-bottom: var(--sp-xl);
+}
+
 .filter-tabs {
   display: flex;
   gap: var(--sp-xs);
   flex-wrap: wrap;
-  margin-bottom: var(--sp-xl);
   padding: 0 var(--sp-lg);
   justify-content: center;
 }
+
+/* Brand filter — native <select> in a styled pill so the OS picker is used on
+   phones. Sits alongside the discipline chips and combines with them. */
+.brand-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 34px;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 0.5px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--muted);
+  font-family: var(--font-body);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.brand-select:hover { color: var(--text); border-color: rgba(var(--accent2-rgb), 0.4); }
+.brand-select.active {
+  color: var(--accent);
+  border-color: rgba(var(--accent2-rgb), 0.6);
+  background: rgba(var(--accent2-rgb), 0.1);
+}
+.brand-select > svg { width: 13px; height: 13px; flex-shrink: 0; }
+.brand-select .brand-chevron { opacity: 0.7; }
+.brand-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--tx-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0 0.15rem;
+  cursor: pointer;
+  outline: none;
+}
+.brand-select select:focus-visible { text-decoration: underline; }
+/* Native option lists follow the OS colour scheme; keep text legible on both. */
+.brand-select option { color: #111; }
 
 .filter-tab {
   padding: 0.44rem 1.05rem;
@@ -2351,17 +2401,21 @@ html[data-work-cat="3d"]      { --cat-glow: oklch(75% 0.16 155 / 0.08); }
   /* Filter chips — one swipeable row instead of three wrapped rows.
      No scroll-snap: it auto-scrolled the row by the padding on load, pulling
      the first chip flush to the edge and out of line with the grid. */
+  .filter-row { gap: var(--sp-sm); margin-bottom: var(--sp-lg); }
   .filter-tabs {
+    width: 100%;
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     padding: 2px var(--sp-md);
-    margin-bottom: var(--sp-md);
+    margin-bottom: 0;
   }
   .filter-tabs::-webkit-scrollbar { display: none; }
   .filter-tab { flex: 0 0 auto; }
+  /* Brand select drops onto its own line under the swipeable chip row */
+  .brand-select { margin: 0 var(--sp-md); }
 }
 
 /* Contact — actions become full-width tappable rows (app contact-card list) */
