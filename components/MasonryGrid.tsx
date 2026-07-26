@@ -6,6 +6,7 @@ import { CATEGORIES, type Category, Project } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
 import { ASPECT_RATIO } from '@/lib/aspectRatio';
 import BeforeAfterVideo from '@/components/BeforeAfterVideo';
+import BrandSelect from '@/components/BrandSelect';
 
 // Fallback ratios for items whose thumbnail couldn't be measured.
 const RATIO_FALLBACK: Record<string, number> = { portrait: 0.5625, square: 1, landscape: 1.778 };
@@ -492,24 +493,7 @@ export default function MasonryGrid({
         </div>
 
         {brands.length > 0 && (
-          <div className={`brand-select${activeBrand ? ' active' : ''}`}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M3 4h18v3l-7 7v6l-4-2v-4L3 7z" />
-            </svg>
-            <select
-              aria-label="Filter by brand"
-              value={activeBrand}
-              onChange={(e) => selectBrand(e.target.value)}
-            >
-              <option value="">All brands</option>
-              {brands.map(([slug, name]) => (
-                <option key={slug} value={slug}>{name}</option>
-              ))}
-            </select>
-            <svg className="brand-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </div>
+          <BrandSelect brands={brands} value={activeBrand} onChange={selectBrand} />
         )}
       </div>
 
