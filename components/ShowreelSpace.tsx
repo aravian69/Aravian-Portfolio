@@ -8,9 +8,9 @@ import { useEffect, useMemo, useRef } from 'react';
 export type ReelItem = { id: string; title: string; thumb: string; video?: string; ratio: string };
 
 const MAX_VIDEOS = 4;     // browser can only decode a handful at once
-const GAP = 2.7;          // z-spacing between panels
+const GAP = 2.05;         // z-spacing between panels (smaller = denser)
 const START_Z = 7;
-const PANEL_H = 2.3;
+const PANEL_H = 3.5;      // base panel height
 
 const ASPECT: Record<string, number> = { portrait: 9 / 16, landscape: 16 / 9, square: 1 };
 
@@ -50,10 +50,11 @@ function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.M
       const thumb = loader.load(item.thumb);
       thumb.colorSpace = THREE.SRGBColorSpace;
       const mat = new THREE.MeshBasicMaterial({ map: thumb, transparent: true, toneMapped: false });
-      // Scatter in a widening tube, avoiding the central fly-through path.
+      // Scatter in a tube around the fly-through path — tighter so panels stay
+      // in view and fill the frame instead of flying off into empty black.
       const ang = rand() * Math.PI * 2;
-      const radius = 3.2 + rand() * 9;
-      const pos = new THREE.Vector3(Math.cos(ang) * radius, (rand() - 0.5) * 12, -6 - i * GAP);
+      const radius = 2.4 + rand() * 5.4;
+      const pos = new THREE.Vector3(Math.cos(ang) * radius, (rand() - 0.5) * 8, -6 - i * GAP);
       const rot = new THREE.Euler((rand() - 0.5) * 0.25, (rand() - 0.5) * 0.4, (rand() - 0.5) * 0.12);
       return { item, mat, thumb, pos, rot, w: PANEL_H * ar, h: PANEL_H, playing: false as boolean, video: null as HTMLVideoElement | null, vtex: null as THREE.VideoTexture | null };
     });
@@ -81,9 +82,9 @@ function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.M
 
     data.forEach((d, i) => {
       const ahead = cz - d.pos.z;
-      // opacity: fade in from far, out once passed
-      const op = ahead < -1 ? Math.max(0, 1 + (ahead + 1) * 0.7) : ahead > 46 ? Math.max(0, 1 - (ahead - 46) / 18) : 1;
-      d.mat.opacity = op;
+      // Fade panels out just after the camera passes them; the fog handles the
+      // far fade, so panels dissolve into the starfield at distance.
+      d.mat.opacity = ahead < -1 ? Math.max(0, 1 + (ahead + 1) * 0.7) : 1;
 
       const shouldPlay = active.has(i);
       if (shouldPlay && !d.playing) {
@@ -158,9 +159,9 @@ export default function ShowreelSpace({ items, onClose }: { items: ReelItem[]; o
         nudge(-dy * 0.05);
       }}
     >
-      <Canvas camera={{ position: [0, 0, START_Z], fov: 62 }} dpr={[1, 1.75]} gl={{ antialias: true }}>
+      <Canvas camera={{ position: [0, 0, START_Z], fov: 50 }} dpr={[1, 1.75]} gl={{ antialias: true }}>
         <color attach="background" args={['#05060b']} />
-        <fog attach="fog" args={['#05060b', 30, 90]} />
+        <fog attach="fog" args={['#05060b', 18, 58]} />
         <Scene items={items} targetZ={targetZ} onPick={pick} />
       </Canvas>
 
