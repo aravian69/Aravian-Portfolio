@@ -2,6 +2,7 @@
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
+import { EffectComposer, DepthOfField } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { useEffect, useMemo, useRef } from 'react';
 
@@ -36,6 +37,23 @@ function makeVideo(src: string) {
   return v;
 }
 
+// Depth-of-field that keeps focus a few units ahead (where the near panels
+// play) and blurs everything nearer/farther, for cinematic depth.
+function Dof() {
+  const ref = useRef<{ target?: THREE.Vector3 }>(null);
+  const target = useRef(new THREE.Vector3());
+  useFrame(({ camera }) => {
+    target.current.set(camera.position.x, camera.position.y, camera.position.z - 5);
+    if (ref.current) ref.current.target = target.current;
+  });
+  return (
+    <EffectComposer>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <DepthOfField ref={ref as any} focusDistance={0} focalLength={0.05} bokehScale={3.5} height={480} />
+    </EffectComposer>
+  );
+}
+
 function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.MutableRefObject<number>; onPick: (id: string) => void }) {
   const { camera } = useThree();
 
@@ -49,12 +67,13 @@ function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.M
       const ar = ASPECT[item.ratio] ?? 1.4;
       const thumb = loader.load(item.thumb);
       thumb.colorSpace = THREE.SRGBColorSpace;
-      const mat = new THREE.MeshBasicMaterial({ map: thumb, transparent: true, toneMapped: false });
-      // Scatter in a tube around the fly-through path — tighter so panels stay
-      // in view and fill the frame instead of flying off into empty black.
+      // depthWrite so the depth-of-field pass can blur these by distance.
+      const mat = new THREE.MeshBasicMaterial({ map: thumb, transparent: true, depthWrite: true, toneMapped: false });
+      // Scatter on the "walls" of the fly-through tube — a clear centre so the
+      // camera moves through open space with the work off to the sides.
       const ang = rand() * Math.PI * 2;
-      const radius = 2.4 + rand() * 5.4;
-      const pos = new THREE.Vector3(Math.cos(ang) * radius, (rand() - 0.5) * 8, -6 - i * GAP);
+      const radius = 4.4 + rand() * 5;
+      const pos = new THREE.Vector3(Math.cos(ang) * radius, (rand() - 0.5) * 7.5, -6 - i * GAP);
       const rot = new THREE.Euler((rand() - 0.5) * 0.25, (rand() - 0.5) * 0.4, (rand() - 0.5) * 0.12);
       return { item, mat, thumb, pos, rot, w: PANEL_H * ar, h: PANEL_H, playing: false as boolean, video: null as HTMLVideoElement | null, vtex: null as THREE.VideoTexture | null };
     });
@@ -73,11 +92,11 @@ function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.M
     camera.position.z += (targetZ.current - camera.position.z) * 0.075;
     const cz = camera.position.z;
 
-    // Choose which panels play video: nearest few just ahead of the camera.
+    // Play the panels CLOSEST to the camera (in front of it), not mid-distance.
     const inBand = data
       .map((d, i) => ({ i, ahead: cz - d.pos.z })) // >0 = ahead of camera
-      .filter((o) => o.ahead > -2.5 && o.ahead < 26 && data[o.i].item.video)
-      .sort((a, b) => Math.abs(a.ahead - 7) - Math.abs(b.ahead - 7));
+      .filter((o) => o.ahead > 0.5 && o.ahead < 16 && data[o.i].item.video)
+      .sort((a, b) => a.ahead - b.ahead); // nearest first
     const active = new Set(inBand.slice(0, MAX_VIDEOS).map((o) => o.i));
 
     data.forEach((d, i) => {
@@ -109,6 +128,7 @@ function Scene({ items, targetZ, onPick }: { items: ReelItem[]; targetZ: React.M
 
   return (
     <>
+      <Dof />
       <Stars radius={120} depth={80} count={4000} factor={4} saturation={0} fade speed={0.6} />
       {data.map((d, i) => (
         <mesh
