@@ -1,14 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ShowreelModal from '@/components/ShowreelModal';
-import type { ReelItem } from '@/components/ShowreelSpace';
-
-// The 3D gallery pulls in Three.js — load it only when the showreel opens so it
-// never weighs down the home page's first paint.
-const ShowreelSpace = dynamic(() => import('@/components/ShowreelSpace'), { ssr: false });
 
 function letters(text: string, key: string) {
   return text.split('').map((ch, i) => (
@@ -16,9 +10,8 @@ function letters(text: string, key: string) {
   ));
 }
 
-export default function HomeHero({ showreelUrl, reel }: { showreelUrl: string | null; reel: ReelItem[] }) {
+export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [spaceOpen, setSpaceOpen] = useState(false);
 
   useEffect(() => {
     // The single-screen no-scroll layout is a desktop conceit. On phones the
@@ -27,21 +20,6 @@ export default function HomeHero({ showreelUrl, reel }: { showreelUrl: string | 
     document.documentElement.style.overflow = 'hidden';
     return () => { document.documentElement.style.overflow = ''; };
   }, []);
-
-  // Lock page scroll while the 3D space is open (its own scroll flies the camera).
-  useEffect(() => {
-    if (!spaceOpen) return;
-    const prev = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = 'hidden';
-    return () => { document.documentElement.style.overflow = prev; };
-  }, [spaceOpen]);
-
-  // Desktop gets the 3D flythrough; phones keep the lighter single-video modal.
-  const watchShowreel = () => {
-    const desktop = window.matchMedia('(min-width: 769px)').matches;
-    if (desktop && reel.length > 0) setSpaceOpen(true);
-    else setModalOpen(true);
-  };
 
   return (
     <>
@@ -57,7 +35,7 @@ export default function HomeHero({ showreelUrl, reel }: { showreelUrl: string | 
             VFX artist, motion designer, and AI video creator based in Jakarta. I turn ideas into visual stories that move people.
           </p>
           <div className="home-actions">
-            <button className="btn-primary" onClick={watchShowreel}>
+            <button className="btn-primary" onClick={() => setModalOpen(true)}>
               <span className="play-dot" />
               Watch Showreel
             </button>
@@ -78,7 +56,6 @@ export default function HomeHero({ showreelUrl, reel }: { showreelUrl: string | 
       </div>
 
       <ShowreelModal isOpen={modalOpen} onClose={() => setModalOpen(false)} videoUrl={showreelUrl} />
-      {spaceOpen && <ShowreelSpace items={reel} onClose={() => setSpaceOpen(false)} />}
     </>
   );
 }
