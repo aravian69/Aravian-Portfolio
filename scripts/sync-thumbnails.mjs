@@ -15,7 +15,22 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECTS_PATH = path.join(__dirname, '..', 'lib', 'projects.ts');
 const LIBRARY_ID = '657161';
-const ACCESS_KEY = process.env.BUNNY_API_KEY ?? '35eef73a-c081-4722-8a97cba1649d-f40f-41ec';
+// Load API key from .env.local (no dotenv dep needed)
+function loadEnv() {
+  const envPath = path.join(process.cwd(), '.env.local');
+  if (!fs.existsSync(envPath)) return;
+  for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+    const [k, ...rest] = line.split('=');
+    if (k && rest.length) process.env[k.trim()] = rest.join('=').trim();
+  }
+}
+loadEnv();
+
+const ACCESS_KEY = process.env.BUNNY_API_KEY;
+if (!ACCESS_KEY) {
+  console.error('\n❌  Set BUNNY_API_KEY in .env.local first.\n');
+  process.exit(1);
+}
 
 function fetchJSON(urlPath) {
   return new Promise((res, rej) => {
