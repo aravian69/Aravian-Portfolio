@@ -99,7 +99,8 @@ export default config({
             comparison: fields.object({
               beforeVideoUrl: fields.url({
                 label: 'Before video (.mp4)',
-                description: 'Raw / green-screen plate as a DIRECT .mp4 link (Bunny → enable "MP4 Fallback").',
+                description:
+                  'Raw / green-screen plate, or the ungraded (log) footage for a colour grade, as a DIRECT .mp4 link (Bunny → enable "MP4 Fallback"). For a grade, set the category to Color Grading and that filter appears on the Work page by itself.',
               }),
               afterVideoUrl: fields.url({
                 label: 'After video (.mp4)',
