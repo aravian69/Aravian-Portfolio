@@ -55,11 +55,14 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   }, []);
 
   // Move focus into the dialog on open, restore it to the trigger on close.
+  // Keyed on `mounted`: the first render returns null, so the Close button
+  // only exists once mounted flips true.
   useEffect(() => {
+    if (!mounted) return;
     const prevFocused = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     return () => prevFocused?.focus?.();
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
     setSlideIdx(0);
@@ -320,10 +323,18 @@ export default function MasonryGrid({
     window.history.pushState({ p: item.id }, '', u);
   };
   const closeProject = () => {
+    // Opened from the grid: step back off the ?p= entry (popstate then clears
+    // the selection), so Back afterwards leaves the page instead of reopening.
+    if (window.history.state?.p) {
+      window.history.back();
+      return;
+    }
+    // Landed on a shared ?p= link: there's no grid entry to return to, so
+    // strip the param in place.
     setSelected(null);
     const u = new URL(window.location.href);
     u.searchParams.delete('p');
-    window.history.pushState({}, '', u);
+    window.history.replaceState({}, '', u);
   };
 
   // Scroll to top of grid area whenever a filter changes
