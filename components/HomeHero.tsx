@@ -35,13 +35,28 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
             VFX artist, motion designer, and AI video creator based in Jakarta. I turn ideas into visual stories that move people.
           </p>
           <div className="home-actions">
-            <button className="btn-primary" onClick={() => setModalOpen(true)}>
-              <span className="play-dot" />
-              Watch Showreel
-            </button>
-            <Link href="/work" className="btn-ghost">
-              View Work
-            </Link>
+            {/* The showreel button only appears once a link is set in the CMS
+                (Home page settings); until then the work itself leads. */}
+            {showreelUrl ? (
+              <>
+                <button type="button" className="btn-primary" onClick={() => setModalOpen(true)}>
+                  <span className="play-dot" />
+                  Watch Showreel
+                </button>
+                <Link href="/work" className="btn-ghost">
+                  View Work
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/work" className="btn-primary">
+                  View Work
+                </Link>
+                <Link href="/contact" className="btn-ghost">
+                  Get in Touch
+                </Link>
+              </>
+            )}
           </div>
           <div className="home-clients" aria-label="Selected clients">
             <span className="home-clients-eyebrow">Selected clients</span>
@@ -55,7 +70,9 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
         <div className="home-right" />
       </div>
 
-      <ShowreelModal isOpen={modalOpen} onClose={() => setModalOpen(false)} videoUrl={showreelUrl} />
+      {showreelUrl && (
+        <ShowreelModal isOpen={modalOpen} onClose={() => setModalOpen(false)} videoUrl={showreelUrl} />
+      )}
     </>
   );
 }

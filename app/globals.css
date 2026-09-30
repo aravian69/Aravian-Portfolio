@@ -534,6 +534,7 @@ nav {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.18s, transform 0.18s;
   border-radius: 3px;
@@ -575,6 +576,7 @@ nav {
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   transition: color 0.18s, border-color 0.18s, background 0.18s;
   border-radius: 3px;
@@ -1715,15 +1717,6 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.modal-placeholder {
-  font-family: var(--font-mono);
-  font-size: var(--tx-sm);
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-align: center;
-  line-height: 2;
 }
 
 /* ── PROJECT MODAL ── */

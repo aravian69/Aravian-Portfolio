@@ -123,7 +123,7 @@ export default config({
         showreelUrl: fields.url({
           label: 'Showreel video URL',
           description:
-            'The video shown in the "Watch Showreel" popup. Paste a Bunny / YouTube / Vimeo embed (player) URL. Leave blank to show a placeholder.',
+            'The video shown in the "Watch Showreel" popup. Paste a Bunny / YouTube / Vimeo embed (player) URL. Leave blank to hide the button (View Work then leads).',
         }),
       },
     }),
