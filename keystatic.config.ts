@@ -205,6 +205,12 @@ export default config({
           description: 'Country code + number, digits only (e.g. 6281234567890). Leave blank to hide the WhatsApp button.',
           defaultValue: '',
         }),
+        whatsappMessage: fields.text({
+          label: 'WhatsApp starter message',
+          description:
+            'Pre-typed in the chat when someone taps WhatsApp on the Contact page (they can edit it before sending). The "Ask about this" button on a project writes its own message naming that project.',
+          defaultValue: 'Hi Aziz, I saw your portfolio and I have a project in mind.',
+        }),
         instagram: fields.text({
           label: 'Instagram handle',
           description: 'Without the @ (e.g. aziizaravian). Leave blank to hide the Instagram button.',

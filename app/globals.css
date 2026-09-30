@@ -1725,8 +1725,24 @@ nav {
 
 .modal-actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+}
+/* The one action that turns a view into a conversation, so it leads.
+   Doubled class to outrank the .modal-close rules defined further down. */
+.modal-close.modal-ask {
+  color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.4);
+  text-decoration: none;
+}
+.modal-close.modal-ask:hover { color: var(--accent); border-color: var(--accent); }
+[data-theme="light"] .modal-close.modal-ask { border-color: rgba(var(--accent-rgb), 0.45); }
+[data-theme="light"] .modal-close.modal-ask:hover { color: var(--accent2); border-color: var(--accent2); }
+/* Phones: it gets its own full-width, thumb-sized row above Share / Close. */
+@media (max-width: 640px) {
+  .modal-close.modal-ask { flex-basis: 100%; justify-content: center; }
 }
 .modal-share {
   display: inline-flex;
@@ -2401,19 +2417,23 @@ nav {
   .nav-label { display: none; }
   .nav-links a { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
   .modal-inner { width: 94vw; }
-  /* Portrait video modal: cap to viewport width on mobile */
+  /* Portrait video modal: cap to viewport width on mobile, and leave ~250px of
+     height for the caption and the two rows of actions below it. */
   .project-modal-portrait {
-    width: min(calc(80vh * 9 / 16), 94vw) !important;
+    width: min(calc((100svh - 250px) * 9 / 16), 94vw) !important;
   }
   .project-modal-iframe-portrait {
-    width: min(calc(80vh * 9 / 16), 94vw);
+    width: min(calc((100svh - 250px) * 9 / 16), 94vw);
     height: auto;
     aspect-ratio: 9 / 16;
   }
   .project-modal-image-portrait {
-    width: min(calc(80vh * 9 / 16), 94vw);
+    width: min(calc((100svh - 250px) * 9 / 16), 94vw);
     height: auto;
   }
+  .project-modal-fit,
+  .project-modal-video,
+  .project-modal-image { max-height: calc(100svh - 250px); }
   /* Modal close — minimum 44px tap target */
   .modal-close { min-height: 44px; display: inline-flex; align-items: center; }
   /* Modal text — smaller on mobile, and stack title above facts so they don't

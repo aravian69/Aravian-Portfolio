@@ -15,7 +15,21 @@ const WIDE_THRESHOLD = 1.15;
 const aspectOf = (item: Project) => ASPECT_RATIO[item.id] ?? RATIO_FALLBACK[item.ratio] ?? 0.5625;
 
 
-function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+/** Where "Ask about this" sends people: WhatsApp when a number is set, email otherwise. */
+export interface Inquiry {
+  /** Digits only; empty when no WhatsApp number is set. */
+  whatsapp: string;
+  email: string;
+}
+
+function askHref(inquiry: Inquiry, project: Project, url: string) {
+  const text = `Hi Aziz, I saw "${project.title}" on your portfolio and I'd like to talk about a project like it.\n${url}`;
+  return inquiry.whatsapp
+    ? `https://wa.me/${inquiry.whatsapp}?text=${encodeURIComponent(text)}`
+    : `mailto:${inquiry.email}?subject=${encodeURIComponent(`Project enquiry: ${project.title}`)}&body=${encodeURIComponent(text)}`;
+}
+
+function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry?: Inquiry; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
   const [slideIdx, setSlideIdx] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -77,7 +91,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       }
       // Trap Tab focus within the dialog's controls.
       if (e.key === 'Tab') {
-        const focusables = overlayRef.current?.querySelectorAll<HTMLElement>('button');
+        const focusables = overlayRef.current?.querySelectorAll<HTMLElement>('a[href], button');
         if (!focusables || focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
@@ -196,6 +210,16 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         </ul>
       </div>
       <div className="modal-actions">
+        {inquiry && (
+          <a
+            className="modal-close modal-ask"
+            href={askHref(inquiry, project, window.location.href)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {inquiry.whatsapp ? 'Ask about this on WhatsApp' : 'Ask about this'}
+          </a>
+        )}
         <button className="modal-close modal-share" onClick={share}>
           {copied ? (
             <>✓ &nbsp; Copied</>
@@ -241,11 +265,13 @@ export default function MasonryGrid({
   projects,
   initialFilter = 'all',
   hiddenCategories = [],
+  inquiry,
 }: {
   projects: Project[];
   initialFilter?: string;
   /** Category ids whose filter button is manually hidden in the CMS. */
   hiddenCategories?: string[];
+  inquiry?: Inquiry;
 }) {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [activeBrand, setActiveBrand] = useState('');
@@ -630,7 +656,7 @@ export default function MasonryGrid({
       )}
 
       {selected && (
-        <ProjectModal project={selected} onClose={closeProject} />
+        <ProjectModal project={selected} inquiry={inquiry} onClose={closeProject} />
       )}
     </>
   );

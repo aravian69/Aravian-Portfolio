@@ -10,7 +10,6 @@ function letters(text: string, key: string) {
 
 export default async function ContactPage() {
   const contact = await getContact();
-  const waDigits = contact.whatsapp.replace(/\D/g, '');
 
   return (
     <div className="page page-enter">
@@ -33,10 +32,10 @@ export default async function ContactPage() {
           </div>
 
           <div className="contact-channels">
-            {waDigits && (
+            {contact.whatsapp && (
               <a
                 className="contact-channel"
-                href={`https://wa.me/${waDigits}`}
+                href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(contact.whatsappMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

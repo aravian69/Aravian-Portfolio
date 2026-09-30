@@ -200,7 +200,9 @@ export async function getAbout(): Promise<AboutInfo> {
 
 export interface ContactInfo {
   email: string;
+  /** Digits only (country code + number), ready for wa.me. */
   whatsapp: string;
+  whatsappMessage: string;
   instagram: string;
   availabilityNote: string;
   location: string;
@@ -209,6 +211,7 @@ export interface ContactInfo {
 const CONTACT_DEFAULTS: ContactInfo = {
   email: 'azizaravian@gmail.com',
   whatsapp: '',
+  whatsappMessage: 'Hi Aziz, I saw your portfolio and I have a project in mind.',
   instagram: 'aziizaravian',
   availabilityNote: 'Available for projects, usually replies within a day',
   location: 'Jakarta, Indonesia · GMT+7',
@@ -220,7 +223,8 @@ export async function getContact(): Promise<ContactInfo> {
   if (!c) return CONTACT_DEFAULTS;
   return {
     email: c.email || CONTACT_DEFAULTS.email,
-    whatsapp: c.whatsapp || '',
+    whatsapp: (c.whatsapp || '').replace(/\D/g, ''),
+    whatsappMessage: c.whatsappMessage || CONTACT_DEFAULTS.whatsappMessage,
     instagram: c.instagram || '',
     availabilityNote: c.availabilityNote || CONTACT_DEFAULTS.availabilityNote,
     location: c.location || CONTACT_DEFAULTS.location,
