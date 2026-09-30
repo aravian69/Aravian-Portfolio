@@ -1325,9 +1325,9 @@ nav {
 .about-meta-list {
   font-family: var(--font-body);
   font-size: var(--tx-sm);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.7;
-  color: var(--muted);
+  color: color-mix(in oklch, var(--text) 78%, var(--bg));
 }
 
 /* Portrait dissolves into the dark from the right edge so the centred name and
@@ -2521,36 +2521,48 @@ nav {
   max-width: 46ch;
 }
 
+/* The strongest proof on the page, so it reads as names, not texture: body
+   face at a readable size, near-full-strength ink. Label matches the About
+   page's meta labels. */
 .home-clients-eyebrow {
   display: block;
-  font-family: var(--font-pixel);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-mono);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--subtle);
-  margin-bottom: 0.55rem;
+  color: var(--accent2);
+  opacity: 0.7;
+  margin-bottom: 0.6rem;
 }
 
 .home-clients-list {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.35rem 0;
+  gap: 0.3rem 0;
   list-style: none;
-  font-family: var(--font-mono);
-  font-size: var(--tx-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  color: color-mix(in oklch, var(--text) 82%, var(--bg));
 }
 
 .home-clients-list li + li::before {
   content: '·';
-  margin: 0 0.7rem;
-  color: var(--subtle);
+  margin: 0 0.6rem;
+  color: var(--muted);
 }
 
-/* Home is a fixed viewport; drop the strip when height gets tight */
+/* Home is a fixed viewport. On shorter laptop screens (1280×720, 1366×768)
+   tighten the vertical rhythm so the client list clears the fixed footer;
+   only drop it when height gets really tight. */
+@media (min-width: 769px) and (max-height: 820px) {
+  .home-left { padding-top: 100px; }
+  .home-eyebrow { margin-bottom: var(--sp-md); }
+  .home-lead { margin-bottom: var(--sp-lg); }
+  .home-clients { margin-top: var(--sp-md); }
+}
 @media (max-height: 620px) {
   .home-clients { display: none; }
 }
