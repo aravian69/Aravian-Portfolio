@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type TouchEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { CATEGORIES, type Category, Project, projectPath } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
@@ -29,7 +29,28 @@ function askHref(inquiry: Inquiry, project: Project, url: string) {
     : `mailto:${inquiry.email}?subject=${encodeURIComponent(`Project enquiry: ${project.title}`)}&body=${encodeURIComponent(text)}`;
 }
 
-function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry?: Inquiry; onClose: () => void }) {
+// A horizontal swipe at least this long (px), and clearly more sideways than
+// vertical, steps to the next / previous item on touch screens.
+const SWIPE_MIN = 50;
+// Native video controls sit along the bottom of the frame; a swipe starting
+// there is scrubbing, not navigating.
+const VIDEO_CONTROLS_H = 56;
+
+function ProjectModal({
+  project,
+  inquiry,
+  position,
+  onStep,
+  onClose,
+}: {
+  project: Project;
+  inquiry?: Inquiry;
+  /** Where this project sits in the grid's current (filtered) order. */
+  position?: { index: number; total: number };
+  /** Move to the next (1) or previous (-1) project in that order. */
+  onStep?: (dir: 1 | -1) => void;
+  onClose: () => void;
+}) {
   const [mounted, setMounted] = useState(false);
   const [slideIdx, setSlideIdx] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -85,13 +106,48 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
     setSlideIdx(0);
   }, [project.id]);
 
+  // One set of controls for everything: a gallery steps through its images
+  // first, then carries on to the neighbouring project.
+  const canStep = !!onStep && !!position && position.total > 1;
+  const nextIsSlide = !!slides && slideIdx < slides.length - 1;
+  const prevIsSlide = !!slides && slideIdx > 0;
+  const goNext = () => {
+    if (nextIsSlide) setSlideIdx(slideIdx + 1);
+    else if (canStep) onStep!(1);
+    else if (slides) setSlideIdx(0);
+  };
+  const goPrev = () => {
+    if (prevIsSlide) setSlideIdx(slideIdx - 1);
+    else if (canStep) onStep!(-1);
+    else if (slides) setSlideIdx(slides.length - 1);
+  };
+  const hasNav = canStep || (!!slides && slides.length > 1);
+
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: TouchEvent) => {
+    const t = e.touches[0];
+    const el = e.target as HTMLElement;
+    // Leave the before/after slider's drag and the video scrub bar alone.
+    const video = el.closest('video');
+    const onScrubBar = video && t.clientY > video.getBoundingClientRect().bottom - VIDEO_CONTROLS_H;
+    touchStart.current = el.closest('.ba-wrap') || onScrubBar ? null : { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) goNext(); else goPrev();
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
-      if (slides) {
-        if (e.key === 'ArrowRight') setSlideIdx((i) => (i + 1) % slides.length);
-        if (e.key === 'ArrowLeft')  setSlideIdx((i) => (i - 1 + slides.length) % slides.length);
-      }
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
       // Trap Tab focus within the dialog's controls.
       if (e.key === 'Tab') {
         const focusables = overlayRef.current?.querySelectorAll<HTMLElement>('a[href], button');
@@ -105,13 +161,13 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose, slides]);
+    // goNext / goPrev close over the current slide and project, so re-bind
+    // whenever they change.
+  }, [onClose, goNext, goPrev]);
 
   if (!mounted) return null;
 
   const target = document.getElementById('modal-root') ?? document.body;
-  const next = () => slides && setSlideIdx((i) => (i + 1) % slides.length);
-  const prev = () => slides && setSlideIdx((i) => (i - 1 + slides.length) % slides.length);
 
   return createPortal(
     <div
@@ -121,8 +177,40 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
       aria-modal="true"
       aria-label={`${project.title}${project.desc ? ` — ${project.desc}` : ''}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onTouchStart={hasNav ? onTouchStart : undefined}
+      onTouchEnd={hasNav ? onTouchEnd : undefined}
     >
+      {canStep && (
+        <div className="modal-count" aria-live="polite">
+          {position!.index + 1} / {position!.total}
+        </div>
+      )}
+      {hasNav && (
+        <>
+          <button
+            type="button"
+            className="modal-nav modal-nav-prev"
+            onClick={goPrev}
+            aria-label={prevIsSlide ? 'Previous image' : 'Previous project'}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="modal-nav modal-nav-next"
+            onClick={goNext}
+            aria-label={nextIsSlide ? 'Next image' : 'Next project'}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </>
+      )}
       <div
+        key={project.id}
         className={`modal-inner project-modal-inner${
           showFitVideo ? ' project-modal-fit' : project.ratio === 'portrait' ? ' project-modal-portrait' : ''
         }`}
@@ -164,22 +252,6 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
               loading="lazy"
               decoding="async"
             />
-            <button
-              type="button"
-              className="slideshow-btn slideshow-prev"
-              onClick={(e) => { e.stopPropagation(); prev(); }}
-              aria-label="Previous image"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className="slideshow-btn slideshow-next"
-              onClick={(e) => { e.stopPropagation(); next(); }}
-              aria-label="Next image"
-            >
-              ›
-            </button>
             <div className="slideshow-counter">
               {slideIdx + 1} / {slides.length}
             </div>
@@ -410,6 +482,21 @@ export default function MasonryGrid({
       (a, b) => (HUE_ORDER[a.id] ?? HUE_FALLBACK) - (HUE_ORDER[b.id] ?? HUE_FALLBACK)
     );
   }, [activeFilter, activeBrand, projects]);
+
+  // Next / previous inside the popup follow the grid as it's currently
+  // filtered and ordered, wrapping at the ends. The URL follows along in place
+  // (replaceState), so Back still closes the popup rather than walking back
+  // through every project seen.
+  const selectedIdx = selected ? filtered.findIndex((p) => p.id === selected.id) : -1;
+  const stepProject = (dir: 1 | -1) => {
+    if (selectedIdx < 0) return;
+    const next = filtered[(selectedIdx + dir + filtered.length) % filtered.length];
+    setSelected(next);
+    const u = new URL(window.location.href);
+    if (u.pathname.startsWith('/p/')) u.pathname = projectPath(next.id);
+    else u.searchParams.set('p', next.id);
+    window.history.replaceState(window.history.state?.p ? { p: next.id } : {}, '', u);
+  };
 
   // Lazily apply thumbnail backgrounds as cards approach the viewport, so a
   // grid of ~90 items doesn't request every image up front.
@@ -663,7 +750,13 @@ export default function MasonryGrid({
       )}
 
       {selected && (
-        <ProjectModal project={selected} inquiry={inquiry} onClose={closeProject} />
+        <ProjectModal
+          project={selected}
+          inquiry={inquiry}
+          position={selectedIdx >= 0 ? { index: selectedIdx, total: filtered.length } : undefined}
+          onStep={stepProject}
+          onClose={closeProject}
+        />
       )}
     </>
   );
