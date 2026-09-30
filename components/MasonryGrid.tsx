@@ -126,6 +126,9 @@ function ProjectModal({
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const onTouchStart = (e: TouchEvent) => {
     const t = e.touches[0];
+    touchStart.current = null;
+    // Only single-finger swipes; a second finger (pinch-zoom) cancels.
+    if (!t || e.touches.length > 1) return;
     const el = e.target as HTMLElement;
     // Leave the before/after slider's drag and the video scrub bar alone.
     const video = el.closest('video');
@@ -135,8 +138,8 @@ function ProjectModal({
   const onTouchEnd = (e: TouchEvent) => {
     const start = touchStart.current;
     touchStart.current = null;
-    if (!start) return;
     const t = e.changedTouches[0];
+    if (!start || !t) return;
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
     if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.5) return;
