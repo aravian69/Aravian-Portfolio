@@ -1,4 +1,5 @@
 import ArrowUpRight from '@/components/ArrowUpRight';
+import ContactEmail from '@/components/ContactEmail';
 import { getContact } from '@/lib/projects.server';
 
 function letters(text: string, key: string) {
@@ -24,14 +25,7 @@ export default async function ContactPage() {
           <p className="contact-lead">
             Have a project in mind? Reach out and let&apos;s make something cinematic.
           </p>
-          <a
-            className="contact-email"
-            href={`https://mail.google.com/mail/?view=cm&to=${contact.email}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {contact.email}
-          </a>
+          <ContactEmail email={contact.email} />
 
           <div className="contact-avail">
             <span className="avail-dot" />
