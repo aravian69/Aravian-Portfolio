@@ -39,6 +39,18 @@ export interface Project {
   hidden?: boolean;
 }
 
+/** One clip of the auto-built showreel (Home → Watch Showreel when no reel video is set). */
+export interface ReelClip {
+  id:      string;
+  /** Direct 720p MP4 (Bunny). */
+  src:     string;
+  poster?: string;
+  /** Brand, or the project title for personal work. */
+  label:   string;
+  /** Category label, e.g. "Motion Graphics". */
+  cat:     string;
+}
+
 /** `slug` is the pretty URL segment for /work/<slug>. 'All' has none (it's /work). */
 export const CATEGORIES: { id: FilterId; label: string; slug?: string }[] = [
   { id: 'all',     label: 'All' },

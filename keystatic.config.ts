@@ -123,8 +123,17 @@ export default config({
         showreelUrl: fields.url({
           label: 'Showreel video URL',
           description:
-            'The video shown in the "Watch Showreel" popup. Paste a Bunny / YouTube / Vimeo embed (player) URL. Leave blank to hide the button (View Work then leads).',
+            'The video shown in the "Watch Showreel" popup. Paste a Bunny / YouTube / Vimeo embed (player) URL. Leave blank to use the automatic showreel below instead.',
         }),
+        reelClips: fields.array(
+          fields.relationship({ label: 'Project', collection: 'projects' }),
+          {
+            label: 'Automatic showreel clips',
+            description:
+              'Used while the showreel URL above is blank: "Watch Showreel" plays about 3 seconds of each project here, in this order. Leave empty and the site picks ~10 varied clips for you. Only video projects hosted on Bunny can play.',
+            itemLabel: (p) => p.value ?? 'Pick a project',
+          }
+        ),
       },
     }),
 

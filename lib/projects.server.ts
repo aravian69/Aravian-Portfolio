@@ -2,7 +2,8 @@ import 'server-only';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '@/keystatic.config';
 import { clImg } from '@/lib/cloudinary';
-import type { Project, Category, Ratio } from '@/lib/projects';
+import { ASPECT_RATIO } from '@/lib/aspectRatio';
+import { CATEGORIES, type Project, type Category, type Ratio, type ReelClip } from '@/lib/projects';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
@@ -102,6 +103,61 @@ export async function getProjects(): Promise<Project[]> {
 export async function getShowreelUrl(): Promise<string | null> {
   const home = await reader.singletons.home.read();
   return home?.showreelUrl || null;
+}
+
+const REEL_MAX = 10;
+// Round-robin order for the automatic pick, so the reel shows range.
+const REEL_CAT_ORDER: Category[] = ['vfx', 'motion', 'ai', '3d', 'editing', 'color', 'graphic'];
+
+/**
+ * Pick a varied reel when none is chosen in the CMS: take turns across
+ * categories, one clip per brand, landscape first (it fills the 16:9 stage).
+ */
+function autoPickReel(playable: Project[]): Project[] {
+  const aspect = (p: Project) => ASPECT_RATIO[p.id] ?? (p.ratio === 'landscape' ? 1.78 : p.ratio === 'square' ? 1 : 0.56);
+  const queues = REEL_CAT_ORDER.map((cat) =>
+    playable
+      .filter((p) => p.cat === cat)
+      .sort((a, b) => aspect(b) - aspect(a) || a.id.localeCompare(b.id))
+  );
+  const picked: Project[] = [];
+  const usedBrands = new Set<string>();
+  while (picked.length < REEL_MAX && queues.some((q) => q.length)) {
+    for (const q of queues) {
+      while (q.length) {
+        const p = q.shift()!;
+        const key = p.brand || p.id;
+        if (usedBrands.has(key)) continue;
+        usedBrands.add(key);
+        picked.push(p);
+        break;
+      }
+      if (picked.length === REEL_MAX) break;
+    }
+  }
+  return picked;
+}
+
+/**
+ * Clips for the automatic showreel: the projects chosen in the CMS (Home page →
+ * Automatic showreel clips), or an automatic varied pick when that list is
+ * empty. Only projects with a direct Bunny MP4 can play.
+ */
+export async function getReelClips(): Promise<ReelClip[]> {
+  const [projects, home] = await Promise.all([getProjects(), reader.singletons.home.read()]);
+  const playable = projects.filter((p) => p.directVideoUrl);
+  const byId = new Map(playable.map((p) => [p.id, p]));
+  const chosen = (home?.reelClips ?? [])
+    .map((id) => (id ? byId.get(id) : undefined))
+    .filter((p): p is Project => !!p);
+  const catLabel = (cat: Category) => CATEGORIES.find((c) => c.id === cat)?.label ?? cat;
+  return (chosen.length ? chosen : autoPickReel(playable)).map((p) => ({
+    id: p.id,
+    src: p.directVideoUrl!,
+    poster: p.thumbnail,
+    label: p.brand || p.title,
+    cat: catLabel(p.cat),
+  }));
 }
 
 /**

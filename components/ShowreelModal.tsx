@@ -2,14 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import AutoReel from '@/components/AutoReel';
+import type { ReelClip } from '@/lib/projects';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  videoUrl: string;
+  /** Showreel video set in the CMS. When blank, the automatic reel plays `clips`. */
+  videoUrl: string | null;
+  clips: ReelClip[];
 }
 
-export default function ShowreelModal({ isOpen, onClose, videoUrl }: Props) {
+export default function ShowreelModal({ isOpen, onClose, videoUrl, clips }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -38,14 +42,18 @@ export default function ShowreelModal({ isOpen, onClose, videoUrl }: Props) {
       aria-label="Showreel"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="modal-inner">
-        <iframe
-          src={videoUrl}
-          title="Showreel"
-          allow="autoplay; fullscreen; encrypted-media"
-          allowFullScreen
-          style={{ width: '100%', aspectRatio: '16 / 9', border: 0, borderRadius: 8, display: 'block' }}
-        />
+      <div className={`modal-inner${videoUrl ? '' : ' reel-inner'}`}>
+        {videoUrl ? (
+          <iframe
+            src={videoUrl}
+            title="Showreel"
+            allow="autoplay; fullscreen; encrypted-media"
+            allowFullScreen
+            style={{ width: '100%', aspectRatio: '16 / 9', border: 0, borderRadius: 8, display: 'block' }}
+          />
+        ) : (
+          <AutoReel clips={clips} />
+        )}
       </div>
       <button ref={closeRef} type="button" className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>
     </div>,

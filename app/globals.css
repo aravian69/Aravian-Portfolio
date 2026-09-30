@@ -1764,6 +1764,170 @@ nav {
   justify-content: center;
 }
 
+/* ── AUTOMATIC SHOWREEL ──
+   A screen, so it stays dark in both themes. Wide stage on desktop; tall on
+   portrait phones, where most of the (vertical) clips then fill the frame. */
+.reel-inner {
+  --reel-ink: oklch(96% 0.006 303);
+  --reel-lime: oklch(91% 0.27 128);
+  position: relative;
+  width: min(92vw, calc(78vh * 16 / 9), 1280px);
+  max-width: none;
+  background: oklch(6% 0.014 303);
+  border: none;
+  overflow: hidden;
+}
+@media (max-aspect-ratio: 3 / 4) {
+  .reel-inner {
+    aspect-ratio: 9 / 16;
+    width: min(92vw, calc(72vh * 9 / 16));
+  }
+}
+
+.reel {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.reel-clip {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reel-clip.is-active { opacity: 1; }
+
+/* Blurred poster behind clips that don't match the stage's shape. */
+.reel-backdrop {
+  position: absolute;
+  inset: -12%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(36px) brightness(0.38) saturate(1.2);
+}
+
+.reel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.reel-progress {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+}
+.reel-seg {
+  flex: 1;
+  padding: 6px 0; /* taller hit area than the 3px bar */
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.reel-seg-track {
+  display: block;
+  height: 3px;
+  background: oklch(96% 0.006 303 / 0.25);
+  overflow: hidden;
+}
+.reel-seg-fill {
+  display: block;
+  height: 100%;
+  background: var(--reel-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.reel-caption {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  text-shadow: 0 1px 14px oklch(0% 0 0 / 0.7);
+  animation: modalRise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-caption-label {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--reel-ink);
+}
+.reel-caption-cat {
+  font-family: var(--font-pixel);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--reel-lime);
+}
+
+.reel-end {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-md);
+  padding: var(--sp-md);
+  text-align: center;
+  cursor: default;
+  background: oklch(6% 0.014 303 / 0.84);
+  backdrop-filter: blur(8px);
+  animation: modalOverlayIn 0.5s ease both;
+}
+.reel-end-eyebrow {
+  font-family: var(--font-pixel);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--reel-lime);
+}
+.reel-end-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--reel-ink);
+}
+.reel-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-sm);
+}
+.reel-end .btn-ghost {
+  color: oklch(80% 0.008 303);
+  border-color: oklch(96% 0.006 303 / 0.22);
+}
+.reel-end .btn-ghost:hover { color: var(--reel-ink); border-color: oklch(96% 0.006 303 / 0.4); }
+.reel-replay {
+  background: none;
+  border: 0;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--tx-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(80% 0.008 303);
+  cursor: pointer;
+}
+.reel-replay:hover { color: var(--reel-ink); }
+
 /* ── PROJECT MODAL ── */
 .project-modal-inner {
   aspect-ratio: unset;

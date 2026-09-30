@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ShowreelModal from '@/components/ShowreelModal';
+import type { ReelClip } from '@/lib/projects';
 
 function letters(text: string, key: string) {
   return text.split('').map((ch, i) => (
@@ -10,8 +11,12 @@ function letters(text: string, key: string) {
   ));
 }
 
-export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }) {
+// Fewer playable clips than this and the automatic reel isn't worth offering.
+const MIN_REEL_CLIPS = 3;
+
+export default function HomeHero({ showreelUrl, reelClips }: { showreelUrl: string | null; reelClips: ReelClip[] }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const hasReel = !!showreelUrl || reelClips.length >= MIN_REEL_CLIPS;
 
   useEffect(() => {
     // The single-screen no-scroll layout is a desktop conceit. On phones the
@@ -35,9 +40,10 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
             VFX artist, motion designer, and AI video creator based in Jakarta. I turn ideas into visual stories that move people.
           </p>
           <div className="home-actions">
-            {/* The showreel button only appears once a link is set in the CMS
-                (Home page settings); until then the work itself leads. */}
-            {showreelUrl ? (
+            {/* Plays the showreel video set in the CMS, or else an automatic
+                reel cut from the projects' own clips. With neither, the work
+                itself leads. */}
+            {hasReel ? (
               <>
                 <button type="button" className="btn-primary" onClick={() => setModalOpen(true)}>
                   <span className="play-dot" />
@@ -70,8 +76,13 @@ export default function HomeHero({ showreelUrl }: { showreelUrl: string | null }
         <div className="home-right" />
       </div>
 
-      {showreelUrl && (
-        <ShowreelModal isOpen={modalOpen} onClose={() => setModalOpen(false)} videoUrl={showreelUrl} />
+      {hasReel && (
+        <ShowreelModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          videoUrl={showreelUrl}
+          clips={reelClips}
+        />
       )}
     </>
   );
