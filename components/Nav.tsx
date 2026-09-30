@@ -62,6 +62,8 @@ export default function Nav() {
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
+    // A project's own page (/p/<id>) is the Work grid with its popup open.
+    if (href === '/work' && pathname.startsWith('/p/')) return true;
     return pathname.startsWith(href);
   }
 

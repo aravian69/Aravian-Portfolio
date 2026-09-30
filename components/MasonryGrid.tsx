@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES, type Category, Project } from '@/lib/projects';
+import { CATEGORIES, type Category, Project, projectPath } from '@/lib/projects';
 import { HUE_ORDER } from '@/lib/hueOrder';
 import { ASPECT_RATIO } from '@/lib/aspectRatio';
 import BeforeAfterVideo from '@/components/BeforeAfterVideo';
@@ -36,10 +36,13 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  // Native share sheet where available (phones), copy-link elsewhere. The
-  // project URL is already in the address bar when the modal is open.
+  // The project's own page (/p/<id>) rather than the address bar, so the link
+  // unfurls in WhatsApp / Instagram / X with this project's thumbnail + title.
+  const shareUrl = `${window.location.origin}${projectPath(project.id)}`;
+
+  // Native share sheet where available (phones), copy-link elsewhere.
   const share = async () => {
-    const url = window.location.href;
+    const url = shareUrl;
     const data = {
       title: `${project.title} — Abdul Aziz`,
       text: project.desc ? `${project.title} · ${project.desc}` : project.title,
@@ -213,7 +216,7 @@ function ProjectModal({ project, inquiry, onClose }: { project: Project; inquiry
         {inquiry && (
           <a
             className="modal-close modal-ask"
-            href={askHref(inquiry, project, window.location.href)}
+            href={askHref(inquiry, project, shareUrl)}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -307,8 +310,11 @@ export default function MasonryGrid({
       setActiveFilter(legacyQuery);
     }
     // ?p=<id> deep-links straight to a project's modal (shared video links).
+    // …and so does a project's own page, /p/<id>.
     const projectFromUrl = () => {
-      const pid = new URLSearchParams(window.location.search).get('p');
+      const pid =
+        window.location.pathname.match(/^\/p\/([^/]+)/)?.[1] ??
+        new URLSearchParams(window.location.search).get('p');
       return pid ? projects.find((pr) => pr.id === pid) ?? null : null;
     };
     const linked = projectFromUrl();
@@ -355,11 +361,12 @@ export default function MasonryGrid({
       window.history.back();
       return;
     }
-    // Landed on a shared ?p= link: there's no grid entry to return to, so
-    // strip the param in place.
+    // Landed on a shared link (/p/<id> or ?p=): there's no grid entry to
+    // return to, so turn this entry into the plain grid in place.
     setSelected(null);
     const u = new URL(window.location.href);
     u.searchParams.delete('p');
+    if (u.pathname.startsWith('/p/')) u.pathname = '/work';
     window.history.replaceState({}, '', u);
   };
 

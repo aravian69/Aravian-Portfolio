@@ -39,6 +39,12 @@ export interface Project {
   hidden?: boolean;
 }
 
+/**
+ * A project's own shareable page. It opens the Work grid with the project's
+ * popup up, and carries that project's link preview (thumbnail + title).
+ */
+export const projectPath = (id: string) => `/p/${id}`;
+
 /** One clip of the auto-built showreel (Home → Watch Showreel when no reel video is set). */
 export interface ReelClip {
   id:      string;
