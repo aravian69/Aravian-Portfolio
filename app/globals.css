@@ -432,6 +432,8 @@ nav {
   justify-content: center;
   padding: 120px var(--sp-lg) var(--sp-xl) var(--sp-lg);
   position: relative;
+  /* The title sizes to this column (cqi), not the viewport. */
+  container-type: inline-size;
 }
 
 .home-left::before {
@@ -472,7 +474,11 @@ nav {
 
 .home-title {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+  /* Capped by the column: "the ordinary," runs ~9.4em wide, so 9.6cqi keeps
+     it on one line in the two-column desktop layout (at 5.5vw alone it broke
+     into four lines, orphaning "the", from ~1025px to ~1580px). In the
+     single-column tablet layout 5.5vw is the smaller term, as before. */
+  font-size: clamp(2.8rem, min(9.6cqi, 5.5vw), 5.2rem);
   font-weight: 800;
   line-height: 0.88;
   letter-spacing: -0.03em;
