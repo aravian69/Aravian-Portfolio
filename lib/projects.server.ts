@@ -138,26 +138,41 @@ function autoPickReel(playable: Project[]): Project[] {
   return picked;
 }
 
+const catLabel = (cat: Category) => CATEGORIES.find((c) => c.id === cat)?.label ?? cat;
+
+/** The reel's view of a project. */
+export function toReelClip(p: Project): ReelClip {
+  return {
+    id: p.id,
+    src: p.directVideoUrl!,
+    poster: p.thumbnail,
+    label: p.brand || p.title,
+    cat: catLabel(p.cat),
+  };
+}
+
 /**
- * Clips for the automatic showreel: the projects chosen in the CMS (Home page →
- * Automatic showreel clips), or an automatic varied pick when that list is
- * empty. Only projects with a direct Bunny MP4 can play.
+ * Everything the reel is built from: the public projects that can play (have a
+ * direct Bunny MP4), the ones chosen in the CMS (in order, unknown or hidden
+ * ids dropped), and the automatic pick used when nothing is chosen.
  */
-export async function getReelClips(): Promise<ReelClip[]> {
+export async function getReelSource(): Promise<{ playable: Project[]; chosen: Project[]; auto: Project[] }> {
   const [projects, home] = await Promise.all([getProjects(), reader.singletons.home.read()]);
   const playable = projects.filter((p) => p.directVideoUrl);
   const byId = new Map(playable.map((p) => [p.id, p]));
   const chosen = (home?.reelClips ?? [])
     .map((id) => (id ? byId.get(id) : undefined))
     .filter((p): p is Project => !!p);
-  const catLabel = (cat: Category) => CATEGORIES.find((c) => c.id === cat)?.label ?? cat;
-  return (chosen.length ? chosen : autoPickReel(playable)).map((p) => ({
-    id: p.id,
-    src: p.directVideoUrl!,
-    poster: p.thumbnail,
-    label: p.brand || p.title,
-    cat: catLabel(p.cat),
-  }));
+  return { playable, chosen, auto: autoPickReel(playable) };
+}
+
+/**
+ * Clips for the automatic showreel: the projects chosen in the CMS / the
+ * showreel picker (/reel), or an automatic varied pick when none are chosen.
+ */
+export async function getReelClips(): Promise<ReelClip[]> {
+  const { chosen, auto } = await getReelSource();
+  return (chosen.length ? chosen : auto).map(toReelClip);
 }
 
 /**

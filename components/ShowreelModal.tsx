@@ -11,9 +11,11 @@ interface Props {
   /** Showreel video set in the CMS. When blank, the automatic reel plays `clips`. */
   videoUrl: string | null;
   clips: ReelClip[];
+  /** Show the automatic reel's end-card links (off in the picker's preview). */
+  reelLinks?: boolean;
 }
 
-export default function ShowreelModal({ isOpen, onClose, videoUrl, clips }: Props) {
+export default function ShowreelModal({ isOpen, onClose, videoUrl, clips, reelLinks = true }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function ShowreelModal({ isOpen, onClose, videoUrl, clips }: Prop
             style={{ width: '100%', aspectRatio: '16 / 9', border: 0, borderRadius: 8, display: 'block' }}
           />
         ) : (
-          <AutoReel clips={clips} />
+          <AutoReel clips={clips} links={reelLinks} />
         )}
       </div>
       <button ref={closeRef} type="button" className="modal-close" onClick={onClose}>✕ &nbsp; Close</button>

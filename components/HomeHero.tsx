@@ -11,12 +11,11 @@ function letters(text: string, key: string) {
   ));
 }
 
-// Fewer playable clips than this and the automatic reel isn't worth offering.
-const MIN_REEL_CLIPS = 3;
-
 export default function HomeHero({ showreelUrl, reelClips }: { showreelUrl: string | null; reelClips: ReelClip[] }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const hasReel = !!showreelUrl || reelClips.length >= MIN_REEL_CLIPS;
+  // Clips come from the showreel picker, or the automatic pick when none are
+  // chosen; either way, whatever is there gets played.
+  const hasReel = !!showreelUrl || reelClips.length > 0;
 
   useEffect(() => {
     // The single-screen no-scroll layout is a desktop conceit. On phones the

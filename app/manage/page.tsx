@@ -28,6 +28,7 @@ export default async function ManagePage() {
           {projects.length} items{hiddenCount > 0 ? ` · ${hiddenCount} hidden` : ''}
         </span>
         <span className={styles.spacer} />
+        <a className={styles.btn} href="/reel">Showreel</a>
         <a className={styles.btn} href={KS_BASE}>List view</a>
         <a className={styles.btnPrimary + ' ' + styles.btn} href={`${KS_BASE}/create`}>
           ＋ Add new

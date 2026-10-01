@@ -15,7 +15,7 @@ const START_AT = 1;       // skip each clip's first second (fade-ins, black fram
  * Tap the right of the frame (or →) for the next clip, the left (or ←) for the
  * previous one; the progress segments jump straight to a clip.
  */
-export default function AutoReel({ clips }: { clips: ReelClip[] }) {
+export default function AutoReel({ clips, links = true }: { clips: ReelClip[]; /** End-card View Work / Get in Touch. */ links?: boolean }) {
   const [idx, setIdx] = useState(0); // idx === clips.length shows the end card
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const fills = useRef<(HTMLSpanElement | null)[]>([]);
@@ -132,10 +132,12 @@ export default function AutoReel({ clips }: { clips: ReelClip[] }) {
         <div className="reel-end">
           <div className="reel-end-eyebrow">Showreel · {clips.length} clips</div>
           <p className="reel-end-title">That&apos;s the taste.<br />The rest is in the work.</p>
-          <div className="reel-end-actions">
-            <Link href="/work" className="btn-primary">View Work</Link>
-            <Link href="/contact" className="btn-ghost">Get in Touch</Link>
-          </div>
+          {links && (
+            <div className="reel-end-actions">
+              <Link href="/work" className="btn-primary">View Work</Link>
+              <Link href="/contact" className="btn-ghost">Get in Touch</Link>
+            </div>
+          )}
           <button type="button" className="reel-replay" onClick={() => go(0)}>↺ Replay</button>
         </div>
       )}

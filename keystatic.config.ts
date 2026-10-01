@@ -131,7 +131,7 @@ export default config({
           {
             label: 'Automatic showreel clips',
             description:
-              'Used while the showreel URL above is blank: "Watch Showreel" plays about 3 seconds of each project here, in this order. Leave empty and the site picks ~10 varied clips for you. Only video projects hosted on Bunny can play.',
+              'Easier: use the visual Showreel Picker at /reel (thumbnails, hover to play, drag to reorder, preview). Used while the showreel URL above is blank: "Watch Showreel" plays about 3 seconds of each project here, in this order. Leave empty and the site picks ~10 varied clips for you. Only video projects hosted on Bunny can play.',
             itemLabel: (p) => p.value ?? 'Pick a project',
           }
         ),
